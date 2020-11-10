@@ -72,7 +72,7 @@ button.search:hover {
 }
 
 .crypto-card-text {
-  padding: 0.7rem 3rem 1.3rem 3rem;
+  padding: 0.7rem 4rem 1.3rem 4rem;
 }
 
 h3 {
@@ -86,10 +86,10 @@ span.symbol {
 
 i.fa-expand, i.fa-heart {
   color: #A3ACB4;
-  font-size: 18px;
+  font-size: 24px;
 }
 
 i.fa-heart {
   position: relative;
-  left: 93%;
+  left: 91%;
 }
