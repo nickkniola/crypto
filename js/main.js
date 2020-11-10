@@ -29,21 +29,66 @@ function getPrice(cryptocurrency) {
   xhr.send();
 }
 
-getPrice('litecoin');
+var cardColumn = document.querySelector('div.col.col-card');
 
 function getPastPrice(cryptocurrency, date) {
+  var mainCard = document.querySelector('div.col.col-card div.card');
   var xhr = new XMLHttpRequest();
   xhr.open('GET', 'https://api.coingecko.com/api/v3/coins/' + cryptocurrency + '/history?date=' + date);
   xhr.responseType = 'json';
   xhr.addEventListener('load', function () {
-    // console.log('xhr.response:', xhr.response);
     // console.log('past price for ' + date, xhr.response.market_data.current_price.usd);
-    console.log('symbol: ', xhr.response.symbol);
     crypto.name = xhr.response.name;
-    crypto.symbol = xhr.response.symbol;
-    console.log('crypto object:', crypto);
+    crypto.symbol = xhr.response.symbol.toUpperCase();
+    if (mainCard === null) {
+      cardColumn.appendChild(cardCreator());
+    } else {
+      cardColumn.removeChild(mainCard);
+      cardColumn.appendChild(cardCreator());
+    }
   });
   xhr.send();
 }
 
-getPastPrice('litecoin', '01-11-2020');
+var form = document.querySelector('form');
+
+form.addEventListener('submit', searchCrypto);
+
+function searchCrypto(event) {
+  event.preventDefault();
+  var searchedCrypto = event.target.elements.cryptoName.value;
+  getPrice(searchedCrypto);
+  getPastPrice(searchedCrypto, '01-11-2020');
+}
+
+function cardCreator() {
+  var cardDiv = document.createElement('div');
+  cardDiv.setAttribute('class', 'card');
+
+  var expandIcon = document.createElement('i');
+  expandIcon.setAttribute('class', 'fas fa-expand');
+  cardDiv.appendChild(expandIcon);
+
+  var cardTextDiv = document.createElement('div');
+  cardTextDiv.setAttribute('class', 'crypto-card-text');
+  cardDiv.appendChild(cardTextDiv);
+
+  var h3Element = document.createElement('h3');
+  h3Element.textContent = crypto.name;
+  var span = document.createElement('span');
+  span.setAttribute('class', 'symbol');
+  span.textContent = ' (' + crypto.symbol + ' - USD)';
+  h3Element.appendChild(span);
+  cardTextDiv.appendChild(h3Element);
+
+  var pElement = document.createElement('p');
+  pElement.setAttribute('class', 'price');
+  pElement.textContent = 'Current Price: $10,000';
+  cardTextDiv.appendChild(pElement);
+
+  var heartIcon = document.createElement('i');
+  heartIcon.setAttribute('class', 'fas fa-heart');
+  cardDiv.appendChild(heartIcon);
+
+  return cardDiv;
+}
