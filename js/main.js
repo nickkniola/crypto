@@ -24,7 +24,7 @@ function getPrice(cryptocurrency) {
   xhr.open('GET', 'https://api.coingecko.com/api/v3/simple/price?ids=' + cryptocurrency + '&vs_currencies=usd');
   xhr.responseType = 'json';
   xhr.addEventListener('load', function () {
-    console.log('current price:', xhr.response.litecoin.usd);
+    // console.log('current price:', xhr.response.litecoin.usd);
   });
   xhr.send();
 }
@@ -36,9 +36,12 @@ function getPastPrice(cryptocurrency, date) {
   xhr.open('GET', 'https://api.coingecko.com/api/v3/coins/' + cryptocurrency + '/history?date=' + date);
   xhr.responseType = 'json';
   xhr.addEventListener('load', function () {
-    console.log('xhr.response:', xhr.response);
-    console.log('past price for ' + date, xhr.response.market_data.current_price.usd);
+    // console.log('xhr.response:', xhr.response);
+    // console.log('past price for ' + date, xhr.response.market_data.current_price.usd);
     console.log('symbol: ', xhr.response.symbol);
+    crypto.name = xhr.response.name;
+    crypto.symbol = xhr.response.symbol;
+    console.log('crypto object:', crypto);
   });
   xhr.send();
 }
