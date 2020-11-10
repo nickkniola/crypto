@@ -1,0 +1,26 @@
+.container {
+  margin: 1rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.container.form {
+  margin-top: 1.5rem;
+}
+
+.nav-container {
+  position: relative;
+}
+
+.nav-row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0.5rem 0;
+  width: 100%;
+}
+
+.col-bars {
+  padding: 0.5rem 0;
+}
