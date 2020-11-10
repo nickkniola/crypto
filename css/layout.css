@@ -1,8 +1,17 @@
 .container {
-  margin: 1rem;
+  margin: 0.5rem;
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.row {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0.5rem 0;
+
 }
 
 .container.form {
