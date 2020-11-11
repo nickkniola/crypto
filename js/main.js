@@ -6,6 +6,8 @@ var navRows = document.querySelectorAll('.nav-row.item');
 var expandIcon = null;
 var heartIcon = null;
 var mainCard = null;
+var cryptoCardText = null;
+var horizontalRules = null;
 
 navButton.addEventListener('click', toggleNav);
 
@@ -30,7 +32,16 @@ function getPrice(cryptocurrency) {
   xhr.open('GET', 'https://api.coingecko.com/api/v3/simple/price?ids=' + cryptocurrency + '&vs_currencies=usd');
   xhr.responseType = 'json';
   xhr.addEventListener('load', function () {
-    crypto.price = xhr.response[cryptocurrency].usd.toString();
+    var fullPrice = xhr.response[cryptocurrency].usd.toFixed(2).toString();
+    if (fullPrice.length >= 8) {
+      var firstHalf = fullPrice.slice(0, 2);
+      var secondHalf = fullPrice.slice(2);
+      console.log(fullPrice, firstHalf, secondHalf);
+      crypto.price = firstHalf + ',' + secondHalf;
+    } else {
+      crypto.price = fullPrice;
+    }
+
     getPastPrice(cryptocurrency, '01-11-2020');
   });
   xhr.send();
@@ -61,6 +72,8 @@ function getPastPrice(cryptocurrency, date) {
     }
     expandIcon = document.querySelector('i.fa-expand');
     heartIcon = document.querySelector('i.fa-heart');
+    cryptoCardText = document.querySelector('.crypto-card-text');
+    horizontalRules = document.querySelectorAll('hr');
     eventListenerExpandIcon();
   });
   xhr.send();
@@ -89,6 +102,10 @@ function cardCreator() {
   cardTextDiv.setAttribute('class', 'crypto-card-text');
   cardDiv.appendChild(cardTextDiv);
 
+  var horizontalRule1 = document.createElement('hr');
+  horizontalRule1.setAttribute('class', 'hidden');
+  cardTextDiv.appendChild(horizontalRule1);
+
   var h3Element = document.createElement('h3');
   h3Element.textContent = crypto.name;
   var span = document.createElement('span');
@@ -97,9 +114,16 @@ function cardCreator() {
   h3Element.appendChild(span);
   cardTextDiv.appendChild(h3Element);
 
+  var horizontalRule2 = document.createElement('hr');
+  horizontalRule2.setAttribute('class', 'hidden');
+  cardTextDiv.appendChild(horizontalRule2);
+
   var pElement = document.createElement('p');
   pElement.setAttribute('class', 'price');
-  pElement.textContent = 'Current Price: $' + crypto.price;
+  pElement.textContent = 'Current Price: ';
+  var spanElement = document.createElement('span');
+  spanElement.textContent = '$' + crypto.price;
+  pElement.appendChild(spanElement);
   cardTextDiv.appendChild(pElement);
 
   var heartIcon = document.createElement('i');
@@ -119,9 +143,15 @@ function toggleFullScreen() {
   if (cardFullScreen) {
     mainCard.setAttribute('class', 'col card card-full-screen');
     heartIcon.setAttribute('class', 'fas fa-heart heart-full-screen');
+    cryptoCardText.setAttribute('class', 'crypto-card-text text-full-screen');
+    horizontalRules[0].setAttribute('class', '');
+    horizontalRules[1].setAttribute('class', '');
   } else {
     mainCard.setAttribute('class', 'col card');
     heartIcon.setAttribute('class', 'fas fa-heart');
+    cryptoCardText.setAttribute('class', 'crypto-card-text');
+    horizontalRules[0].setAttribute('class', 'hidden');
+    horizontalRules[1].setAttribute('class', 'hidden');
   }
 
 }
