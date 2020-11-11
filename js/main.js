@@ -29,7 +29,7 @@ function getPrice(cryptocurrency) {
   xhr.open('GET', 'https://api.coingecko.com/api/v3/simple/price?ids=' + cryptocurrency + '&vs_currencies=usd');
   xhr.responseType = 'json';
   xhr.addEventListener('load', function () {
-
+    crypto.price = xhr.response[cryptocurrency].usd.toString();
   });
   xhr.send();
 }
