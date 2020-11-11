@@ -41,7 +41,6 @@ function getPrice(cryptocurrency) {
     } else {
       crypto.price = fullPrice;
     }
-
     getPastPrice(cryptocurrency, '01-11-2020');
   });
   xhr.send();
