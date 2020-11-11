@@ -29,7 +29,7 @@ function getPrice(cryptocurrency) {
   xhr.open('GET', 'https://api.coingecko.com/api/v3/simple/price?ids=' + cryptocurrency + '&vs_currencies=usd');
   xhr.responseType = 'json';
   xhr.addEventListener('load', function () {
-    // console.log('current price:', xhr.response.litecoin.usd);
+
   });
   xhr.send();
 }
@@ -43,7 +43,10 @@ function getPastPrice(cryptocurrency, date) {
   xhr.open('GET', 'https://api.coingecko.com/api/v3/coins/' + cryptocurrency + '/history?date=' + date);
   xhr.responseType = 'json';
   xhr.addEventListener('load', function () {
-    // console.log('past price for ' + date, xhr.response.market_data.current_price.usd);
+
+    if (xhr.response.id === undefined) {
+      return;
+    }
     crypto.id = xhr.response.id;
     crypto.name = xhr.response.name;
     crypto.symbol = xhr.response.symbol.toUpperCase();
@@ -69,6 +72,7 @@ function searchCrypto(event) {
   var searchedCrypto = event.target.elements.cryptoName.value;
   getPrice(searchedCrypto);
   getPastPrice(searchedCrypto, '01-11-2020');
+  form.reset();
 }
 
 function cardCreator() {
