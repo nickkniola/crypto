@@ -24,12 +24,14 @@ function toggleNav() {
 }
 
 function getPrice(cryptocurrency) {
+
   cryptocurrency = cryptocurrency.replaceAll(' ', '-').toLowerCase();
   var xhr = new XMLHttpRequest();
   xhr.open('GET', 'https://api.coingecko.com/api/v3/simple/price?ids=' + cryptocurrency + '&vs_currencies=usd');
   xhr.responseType = 'json';
   xhr.addEventListener('load', function () {
     crypto.price = xhr.response[cryptocurrency].usd.toString();
+    getPastPrice(cryptocurrency, '01-11-2020');
   });
   xhr.send();
 }
@@ -50,6 +52,7 @@ function getPastPrice(cryptocurrency, date) {
     crypto.id = xhr.response.id;
     crypto.name = xhr.response.name;
     crypto.symbol = xhr.response.symbol.toUpperCase();
+
     if (mainCard === null) {
       cardColumn.appendChild(cardCreator());
     } else {
@@ -71,7 +74,6 @@ function searchCrypto(event) {
   event.preventDefault();
   var searchedCrypto = event.target.elements.cryptoName.value;
   getPrice(searchedCrypto);
-  getPastPrice(searchedCrypto, '01-11-2020');
   form.reset();
 }
 
@@ -97,7 +99,7 @@ function cardCreator() {
 
   var pElement = document.createElement('p');
   pElement.setAttribute('class', 'price');
-  pElement.textContent = 'Current Price: $10,000';
+  pElement.textContent = 'Current Price: $' + crypto.price;
   cardTextDiv.appendChild(pElement);
 
   var heartIcon = document.createElement('i');

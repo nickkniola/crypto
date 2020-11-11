@@ -1,5 +1,6 @@
 /* exported data */
-var data = [];
+// eslint-disable-next-line no-unused-vars
+var favorites = [];
 // eslint-disable-next-line no-unused-vars
 var crypto = {
   id: '',
