@@ -1,7 +1,11 @@
 var navOpen = false;
+var cardFullScreen = false;
 var navButton = document.querySelector('i.fa-bars');
 var navBar = document.querySelector('header.nav-bar');
 var navRows = document.querySelectorAll('.nav-row.item');
+var expandIcon = null;
+var heartIcon = null;
+var mainCard = null;
 
 navButton.addEventListener('click', toggleNav);
 
@@ -49,6 +53,9 @@ function getPastPrice(cryptocurrency, date) {
       cardColumn.removeChild(mainCard);
       cardColumn.appendChild(cardCreator());
     }
+    expandIcon = document.querySelector('i.fa-expand');
+    heartIcon = document.querySelector('i.fa-heart');
+    eventListenerExpandIcon();
   });
   xhr.send();
 }
@@ -94,4 +101,21 @@ function cardCreator() {
   cardDiv.appendChild(heartIcon);
 
   return cardDiv;
+}
+
+function eventListenerExpandIcon() {
+  mainCard = document.querySelector('div.col-card .card');
+  expandIcon.addEventListener('click', toggleFullScreen);
+}
+
+function toggleFullScreen() {
+  cardFullScreen = !cardFullScreen;
+  if (cardFullScreen) {
+    mainCard.setAttribute('class', 'col card card-full-screen');
+    heartIcon.setAttribute('class', 'fas fa-heart heart-full-screen');
+  } else {
+    mainCard.setAttribute('class', 'col card');
+    heartIcon.setAttribute('class', 'fas fa-heart');
+  }
+
 }
