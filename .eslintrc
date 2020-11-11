@@ -17,6 +17,7 @@
       "always"
     ],
     "padded-blocks": "off",
+    "no-var": 0,
     "arrow-parens": [
       "error",
       "as-needed"
