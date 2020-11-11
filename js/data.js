@@ -2,6 +2,7 @@
 var data = [];
 // eslint-disable-next-line no-unused-vars
 var crypto = {
+  id: '',
   name: '',
   symbol: '',
   price: '',

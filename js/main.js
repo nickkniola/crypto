@@ -20,6 +20,7 @@ function toggleNav() {
 }
 
 function getPrice(cryptocurrency) {
+  cryptocurrency = cryptocurrency.replaceAll(' ', '-').toLowerCase();
   var xhr = new XMLHttpRequest();
   xhr.open('GET', 'https://api.coingecko.com/api/v3/simple/price?ids=' + cryptocurrency + '&vs_currencies=usd');
   xhr.responseType = 'json';
@@ -32,12 +33,14 @@ function getPrice(cryptocurrency) {
 var cardColumn = document.querySelector('div.col.col-card');
 
 function getPastPrice(cryptocurrency, date) {
+  cryptocurrency = cryptocurrency.replaceAll(' ', '-').toLowerCase();
   var mainCard = document.querySelector('div.col.col-card div.card');
   var xhr = new XMLHttpRequest();
   xhr.open('GET', 'https://api.coingecko.com/api/v3/coins/' + cryptocurrency + '/history?date=' + date);
   xhr.responseType = 'json';
   xhr.addEventListener('load', function () {
     // console.log('past price for ' + date, xhr.response.market_data.current_price.usd);
+    crypto.id = xhr.response.id;
     crypto.name = xhr.response.name;
     crypto.symbol = xhr.response.symbol.toUpperCase();
     if (mainCard === null) {
