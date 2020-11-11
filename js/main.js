@@ -8,6 +8,7 @@ var heartIcon = null;
 var mainCard = null;
 var cryptoCardText = null;
 var horizontalRules = null;
+var spinningWheel = null;
 
 navButton.addEventListener('click', toggleNav);
 
@@ -36,7 +37,6 @@ function getPrice(cryptocurrency) {
     if (fullPrice.length >= 8) {
       var firstHalf = fullPrice.slice(0, 2);
       var secondHalf = fullPrice.slice(2);
-      console.log(fullPrice, firstHalf, secondHalf);
       crypto.price = firstHalf + ',' + secondHalf;
     } else {
       crypto.price = fullPrice;
@@ -51,7 +51,14 @@ var cardColumn = document.querySelector('div.col.col-card');
 
 function getPastPrice(cryptocurrency, date) {
   cryptocurrency = cryptocurrency.replaceAll(' ', '-').toLowerCase();
-  var mainCard = document.querySelector('div.col.col-card div.card');
+  mainCard = document.querySelector('div.col.col-card div.card');
+  spinningWheel = document.querySelector('img.spinning-wheel');
+  if (mainCard === null) {
+    spinningWheel.setAttribute('class', 'spinning-wheel');
+  } else {
+    cardColumn.removeChild(mainCard);
+    spinningWheel.setAttribute('class', 'spinning-wheel');
+  }
   var xhr = new XMLHttpRequest();
   xhr.open('GET', 'https://api.coingecko.com/api/v3/coins/' + cryptocurrency + '/history?date=' + date);
   xhr.responseType = 'json';
@@ -65,9 +72,10 @@ function getPastPrice(cryptocurrency, date) {
     crypto.symbol = xhr.response.symbol.toUpperCase();
 
     if (mainCard === null) {
+      spinningWheel.setAttribute('class', 'spinning-wheel hidden');
       cardColumn.appendChild(cardCreator());
     } else {
-      cardColumn.removeChild(mainCard);
+      spinningWheel.setAttribute('class', 'spinning-wheel hidden');
       cardColumn.appendChild(cardCreator());
     }
     expandIcon = document.querySelector('i.fa-expand');
