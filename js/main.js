@@ -1,5 +1,6 @@
 var navOpen = false;
 var cardFullScreen = false;
+var favorite = false;
 var navButton = document.querySelector('i.fa-bars');
 var navBar = document.querySelector('header.nav-bar');
 var navRows = document.querySelectorAll('.nav-row.item');
@@ -200,6 +201,7 @@ function cardCreator() {
 function eventListenerExpandIcon() {
   mainCard = document.querySelector('div.col-card .card');
   expandIcon.addEventListener('click', toggleFullScreen);
+  heartIcon.addEventListener('click', toggleFavorite);
 }
 
 function toggleFullScreen() {
@@ -264,5 +266,12 @@ function findPastPrice(cryptocurrency, date, daysAgo) {
     }
   });
   xhr.send();
+}
 
+function toggleFavorite() {
+  favorite = !favorite;
+
+  if (favorite) {
+    // push current data object into data array of objects
+  }
 }
