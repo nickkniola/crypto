@@ -8,6 +8,7 @@ var crypto = {
   symbol: '',
   price: '',
   pastPrices: {
+    oneWeek: '',
     oneMonth: '',
     threeMonths: '',
     sixMonths: '',

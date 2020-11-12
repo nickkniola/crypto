@@ -9,6 +9,8 @@ var mainCard = null;
 var cryptoCardText = null;
 var horizontalRules = null;
 var spinningWheel = null;
+var fullPrice = null;
+crypto.pastPrices = {};
 
 navButton.addEventListener('click', toggleNav);
 
@@ -27,6 +29,12 @@ function toggleNav() {
 }
 
 function getPrice(cryptocurrency) {
+  findPastPrice(cryptocurrency, dateGenerator(7), 'oneWeek');
+  findPastPrice(cryptocurrency, dateGenerator(30.41), 'oneMonth');
+  findPastPrice(cryptocurrency, dateGenerator(91.25), 'threeMonths');
+  findPastPrice(cryptocurrency, dateGenerator(182.5), 'sixMonths');
+  findPastPrice(cryptocurrency, dateGenerator(365), 'oneYear');
+  findPastPrice(cryptocurrency, dateGenerator(1825), 'fiveYears');
 
   cryptocurrency = cryptocurrency.replaceAll(' ', '-').toLowerCase();
   var xhr = new XMLHttpRequest();
@@ -41,14 +49,14 @@ function getPrice(cryptocurrency) {
     } else {
       crypto.price = fullPrice;
     }
-    getPastPrice(cryptocurrency, '16-1-2020');
+    getName(cryptocurrency, dateGenerator(0));
   });
   xhr.send();
 }
 
 var cardColumn = document.querySelector('div.col.col-card');
 
-function getPastPrice(cryptocurrency, date) {
+function getName(cryptocurrency, date) {
   cryptocurrency = cryptocurrency.replaceAll(' ', '-').toLowerCase();
   mainCard = document.querySelector('div.col.col-card div.card');
   spinningWheel = document.querySelector('img.spinning-wheel');
@@ -163,15 +171,40 @@ function toggleFullScreen() {
 }
 
 function dateGenerator(daysAgo) {
-  // get current date '01-11-2020' day-month-year
   var millisecondsAgo = daysAgo * 86400000;
   var currentMilliseconds = Date.now();
   var resultMilliseconds = currentMilliseconds - millisecondsAgo;
-  // find daysAgo date
   var date = new Date(resultMilliseconds);
   var day = date.getDate();
   var month = date.getMonth() + 1;
   var year = date.getFullYear();
   var fullDate = day + '-' + month + '-' + year;
   return fullDate;
+}
+
+function findPastPrice(cryptocurrency, date, daysAgo) {
+  var xhr = new XMLHttpRequest();
+  xhr.open('GET', 'https://api.coingecko.com/api/v3/coins/' + cryptocurrency + '/history?date=' + date);
+  xhr.responseType = 'json';
+  xhr.addEventListener('load', function () {
+    if (!xhr.response.market_data) {
+      fullPrice = 'N/A';
+    } else {
+      fullPrice = xhr.response.market_data.current_price.usd.toFixed(2).toString();
+    }
+
+    if (fullPrice.length === 7) {
+      var firstHalf = fullPrice.slice(0, 1);
+      var secondHalf = fullPrice.slice(1);
+      fullPrice = firstHalf + ',' + secondHalf;
+    } else if (fullPrice.length === 8) {
+      firstHalf = fullPrice.slice(0, 2);
+      secondHalf = fullPrice.slice(2);
+      fullPrice = firstHalf + ',' + secondHalf;
+    }
+
+    crypto.pastPrices[daysAgo] = fullPrice;
+  });
+  xhr.send();
+
 }
