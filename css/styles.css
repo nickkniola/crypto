@@ -135,7 +135,6 @@ i.fa-heart {
 
 .text-full-screen {
   padding: 0;
-  text-align: center;
 }
 
 .card-full-screen h3 {
@@ -144,9 +143,19 @@ i.fa-heart {
 
 .card-full-screen p.price {
   font-size: 20px;
+  margin-bottom: 2rem;
 }
 
-.card-full-screen p.price span {
+p.price span {
+  font-weight: 700;
+}
+
+p.past-price {
+  font-size: 16px;
+  margin: 0.6rem 0;
+}
+
+p.past-price span {
   font-weight: 700;
 }
 
