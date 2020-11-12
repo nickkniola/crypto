@@ -10,6 +10,7 @@ var cryptoCardText = null;
 var horizontalRules = null;
 var spinningWheel = null;
 var fullPrice = null;
+var prevDateIncrementer = 0;
 crypto.pastPrices = {};
 
 navButton.addEventListener('click', toggleNav);
@@ -29,12 +30,6 @@ function toggleNav() {
 }
 
 function getPrice(cryptocurrency) {
-  findPastPrice(cryptocurrency, dateGenerator(7), 'oneWeek');
-  findPastPrice(cryptocurrency, dateGenerator(30.41), 'oneMonth');
-  findPastPrice(cryptocurrency, dateGenerator(91.25), 'threeMonths');
-  findPastPrice(cryptocurrency, dateGenerator(182.5), 'sixMonths');
-  findPastPrice(cryptocurrency, dateGenerator(365), 'oneYear');
-  findPastPrice(cryptocurrency, dateGenerator(1825), 'fiveYears');
 
   cryptocurrency = cryptocurrency.replaceAll(' ', '-').toLowerCase();
   var xhr = new XMLHttpRequest();
@@ -49,7 +44,13 @@ function getPrice(cryptocurrency) {
     } else {
       crypto.price = fullPrice;
     }
-    getName(cryptocurrency, dateGenerator(0));
+    // getName(cryptocurrency, dateGenerator(0));
+    findPastPrice(cryptocurrency, dateGenerator(7), 'oneWeek');
+    findPastPrice(cryptocurrency, dateGenerator(30.41), 'oneMonth');
+    findPastPrice(cryptocurrency, dateGenerator(91.25), 'threeMonths');
+    findPastPrice(cryptocurrency, dateGenerator(182.5), 'sixMonths');
+    findPastPrice(cryptocurrency, dateGenerator(365), 'oneYear');
+    findPastPrice(cryptocurrency, dateGenerator(1825), 'fiveYears');
   });
   xhr.send();
 }
@@ -141,6 +142,54 @@ function cardCreator() {
   pElement.appendChild(spanElement);
   cardTextDiv.appendChild(pElement);
 
+  var prevWeekElement = document.createElement('p');
+  prevWeekElement.setAttribute('class', 'past-price');
+  prevWeekElement.textContent = 'Prev. Week: ';
+  var spanPrevWeek = document.createElement('span');
+  spanPrevWeek.textContent = '$' + crypto.pastPrices.oneWeek;
+  prevWeekElement.appendChild(spanPrevWeek);
+  cardTextDiv.appendChild(prevWeekElement);
+
+  var prevMonthElement = document.createElement('p');
+  prevMonthElement.setAttribute('class', 'past-price');
+  prevMonthElement.textContent = 'Prev. Month: ';
+  var spanPrevMonth = document.createElement('span');
+  spanPrevMonth.textContent = '$' + crypto.pastPrices.oneMonth;
+  prevMonthElement.appendChild(spanPrevMonth);
+  cardTextDiv.appendChild(prevMonthElement);
+
+  var threeMonthsElement = document.createElement('p');
+  threeMonthsElement.setAttribute('class', 'past-price');
+  threeMonthsElement.textContent = '3 Months Ago: ';
+  var spanThreeMonths = document.createElement('span');
+  spanThreeMonths.textContent = '$' + crypto.pastPrices.threeMonths;
+  threeMonthsElement.appendChild(spanThreeMonths);
+  cardTextDiv.appendChild(threeMonthsElement);
+
+  var sixMonthsElement = document.createElement('p');
+  sixMonthsElement.setAttribute('class', 'past-price');
+  sixMonthsElement.textContent = '6 Months Ago: ';
+  var spanSixMonths = document.createElement('span');
+  spanSixMonths.textContent = '$' + crypto.pastPrices.sixMonths;
+  sixMonthsElement.appendChild(spanSixMonths);
+  cardTextDiv.appendChild(sixMonthsElement);
+
+  var oneYearElement = document.createElement('p');
+  oneYearElement.setAttribute('class', 'past-price');
+  oneYearElement.textContent = '1 Year Ago: ';
+  var spanOneYear = document.createElement('span');
+  spanOneYear.textContent = '$' + crypto.pastPrices.oneYear;
+  oneYearElement.appendChild(spanOneYear);
+  cardTextDiv.appendChild(oneYearElement);
+
+  var fiveYearsElement = document.createElement('p');
+  fiveYearsElement.setAttribute('class', 'past-price');
+  fiveYearsElement.textContent = '5 Years Ago: ';
+  var spanFiveYears = document.createElement('span');
+  spanFiveYears.textContent = '$' + crypto.pastPrices.fiveYears;
+  fiveYearsElement.appendChild(spanFiveYears);
+  cardTextDiv.appendChild(fiveYearsElement);
+
   var heartIcon = document.createElement('i');
   heartIcon.setAttribute('class', 'fas fa-heart');
   cardDiv.appendChild(heartIcon);
@@ -204,6 +253,13 @@ function findPastPrice(cryptocurrency, date, daysAgo) {
     }
 
     crypto.pastPrices[daysAgo] = fullPrice;
+
+    if (prevDateIncrementer < 6) {
+      prevDateIncrementer++;
+    } else if (prevDateIncrementer === 6) {
+      prevDateIncrementer = 0;
+      getName(cryptocurrency, dateGenerator(0));
+    }
   });
   xhr.send();
 
