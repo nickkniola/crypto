@@ -41,7 +41,7 @@ function getPrice(cryptocurrency) {
     } else {
       crypto.price = fullPrice;
     }
-    getPastPrice(cryptocurrency, '01-11-2020');
+    getPastPrice(cryptocurrency, '16-1-2020');
   });
   xhr.send();
 }
@@ -160,5 +160,18 @@ function toggleFullScreen() {
     horizontalRules[0].setAttribute('class', 'hidden');
     horizontalRules[1].setAttribute('class', 'hidden');
   }
+}
 
+function dateGenerator(daysAgo) {
+  // get current date '01-11-2020' day-month-year
+  var millisecondsAgo = daysAgo * 86400000;
+  var currentMilliseconds = Date.now();
+  var resultMilliseconds = currentMilliseconds - millisecondsAgo;
+  // find daysAgo date
+  var date = new Date(resultMilliseconds);
+  var day = date.getDate();
+  var month = date.getMonth() + 1;
+  var year = date.getFullYear();
+  var fullDate = day + '-' + month + '-' + year;
+  return fullDate;
 }
