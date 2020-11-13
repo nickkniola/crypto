@@ -414,7 +414,6 @@ miniCardRow.addEventListener('click', toggleMiniFullScreen);
 function toggleMiniFullScreen(event) {
   var miniExpandIcons = document.querySelectorAll('.fa-expand.mini');
   miniCards = document.querySelectorAll('.mini-card');
-  // heartIcon = document.querySelector('i.fa-heart.mini');
   miniCardFullScreen = !miniCardFullScreen;
   if (miniCardFullScreen) {
     if (event.target.className.includes(miniExpandIcons[0].className)) {
