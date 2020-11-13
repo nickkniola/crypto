@@ -269,9 +269,26 @@ function findPastPrice(cryptocurrency, date, daysAgo) {
 }
 
 function toggleFavorite() {
-  favorite = !favorite;
+  favorite = true;
 
   if (favorite) {
-    // push current data object into data array of objects
+    // eslint-disable-next-line no-undef
+    if (!favorites || !Object.keys(favorites).includes(crypto.id)) {
+      // eslint-disable-next-line no-undef
+      favorites[crypto.id] = {
+        id: crypto.id,
+        name: crypto.name,
+        symbol: crypto.symbol,
+        price: crypto.price,
+        pastPrices: {
+          oneWeek: crypto.pastPrices.oneWeek,
+          oneMonth: crypto.pastPrices.oneMonth,
+          threeMonths: crypto.pastPrices.threeMonths,
+          sixMonths: crypto.pastPrices.sixMonths,
+          oneYear: crypto.pastPrices.oneYear,
+          fiveYears: crypto.pastPrices.fiveYears
+        }
+      };
+    }
   }
 }
