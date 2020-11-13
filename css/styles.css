@@ -103,6 +103,7 @@ h3 {
   font-size: 20px;
   margin: 0;
   padding: 0.5rem;
+  text-align: center;
 }
 
 
@@ -114,15 +115,44 @@ p.price {
  font-size: 16px;
 }
 
-i.fa-expand, i.fa-heart {
+i.fa-expand, i.fa-heart.main {
   color: #A3ACB4;
   font-size: 20px;
   padding: 5px;
 }
 
-i.fa-heart {
+i.fa-heart.main {
   position: relative;
   left: 91%;
+}
+
+.mini-card-row {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.mini-card {
+  border: 1px solid black;
+  width: 48%;
+  background-color: #FAFAFA;
+  box-shadow: 1px 2px 2px black;
+  margin: 1%;
+}
+
+i.fa-heart.mini.shrunk {
+  position: relative;
+  left: 89%;
+  color: #da1010;
+}
+
+.mini-card-row h4 {
+  font-size: 13px;
+  text-align: center;
+}
+
+.mini-card-row p {
+  font-size: 11px;
+  text-align: center;
 }
 
 .card-full-screen {
@@ -131,6 +161,7 @@ i.fa-heart {
   left: 0;
   right: 0;
   bottom: 0;
+  border: none;
 }
 
 .text-full-screen {
@@ -159,12 +190,44 @@ p.past-price span {
   font-weight: 700;
 }
 
-i.heart-full-screen {
+i.fa-heart.main.heart-full-screen {
   position: absolute;
   bottom: 0;
-  right: 0
+  right: 0;
+}
+
+i.fa-heart.mini.heart-full-screen {
+  position: absolute;
+  bottom: 1%;
+  right: 1%;
+  color: #da1010;
+  font-size: 20px;
+}
+
+.mini-card-full-screen {
+  position: absolute;
+  height: 91.9vh;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color:#FAFAFA;
+}
+
+.mini-card-full-screen h4 {
+  font-size: 24px;
+  margin: 0;
+  padding: 0.5rem;
+}
+
+.mini-card-full-screen p.price {
+  font-size: 20px;
+  margin-bottom: 2rem;
 }
 
 .spinning-wheel {
   width: 30px;
+}
+
+i.fa-heart.main.favorited {
+  color: #da1010;
 }

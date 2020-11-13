@@ -1,6 +1,6 @@
 /* exported data */
 // eslint-disable-next-line no-unused-vars
-var favorites = [];
+var favorites = {};
 // eslint-disable-next-line no-unused-vars
 var crypto = {
   id: '',
@@ -16,3 +16,13 @@ var crypto = {
     fiveYears: ''
   }
 };
+
+var savedFavorites = localStorage.getItem('favoritesData');
+if (savedFavorites !== null && savedFavorites !== 'undefined') {
+  favorites = JSON.parse(savedFavorites);
+}
+
+window.addEventListener('beforeunload', function () {
+  var favoritesJSON = JSON.stringify(favorites);
+  localStorage.setItem('favoritesData', favoritesJSON);
+});
