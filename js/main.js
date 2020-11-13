@@ -406,6 +406,7 @@ function toggleFavorite() {
     } else {
       heartIcon.setAttribute('class', 'fas fa-heart main');
     }
+    delete favorites[crypto.id];
   }
 }
 
