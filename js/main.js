@@ -393,6 +393,7 @@ function toggleFavorite() {
           fiveYears: crypto.pastPrices.fiveYears
         }
       };
+      miniCardRow.appendChild(miniCardCreator(crypto.id));
     }
   } else {
     if (heartIcon.className.includes('heart-full-screen')) {
