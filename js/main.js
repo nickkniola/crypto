@@ -102,6 +102,7 @@ form.addEventListener('submit', searchCrypto);
 
 function searchCrypto(event) {
   event.preventDefault();
+  favorite = false;
   var searchedCrypto = event.target.elements.cryptoName.value;
   getPrice(searchedCrypto);
   form.reset();
@@ -207,15 +208,23 @@ function eventListenerExpandIcon() {
 function toggleFullScreen() {
   cardFullScreen = !cardFullScreen;
   if (cardFullScreen) {
+    if (favorite) {
+      heartIcon.setAttribute('class', 'fas fa-heart heart-full-screen favorited');
+    } else {
+      heartIcon.setAttribute('class', 'fas fa-heart heart-full-screen');
+    }
     mainCard.setAttribute('class', 'col card card-full-screen');
-    heartIcon.setAttribute('class', 'fas fa-heart heart-full-screen');
     cryptoCardText.setAttribute('class', 'crypto-card-text text-full-screen');
     horizontalRules[0].setAttribute('class', '');
     horizontalRules[1].setAttribute('class', '');
     prevPrices.forEach(el => el.setAttribute('class', 'past-price'));
   } else {
+    if (favorite) {
+      heartIcon.setAttribute('class', 'fas fa-heart favorited');
+    } else {
+      heartIcon.setAttribute('class', 'fas fa-heart');
+    }
     mainCard.setAttribute('class', 'col card');
-    heartIcon.setAttribute('class', 'fas fa-heart');
     cryptoCardText.setAttribute('class', 'crypto-card-text');
     horizontalRules[0].setAttribute('class', 'hidden');
     horizontalRules[1].setAttribute('class', 'hidden');
@@ -269,9 +278,11 @@ function findPastPrice(cryptocurrency, date, daysAgo) {
 }
 
 function toggleFavorite() {
-  favorite = true;
+  favorite = !favorite;
 
   if (favorite) {
+    // change the color of the heart icon to red
+    heartIcon.setAttribute('class', heartIcon.className + ' favorited');
     // eslint-disable-next-line no-undef
     if (!favorites || !Object.keys(favorites).includes(crypto.id)) {
       // eslint-disable-next-line no-undef
@@ -289,6 +300,13 @@ function toggleFavorite() {
           fiveYears: crypto.pastPrices.fiveYears
         }
       };
+    }
+  } else {
+    // change the color of the heart icon back to initial grayish color
+    if (heartIcon.className.includes('heart-full-screen')) {
+      heartIcon.setAttribute('class', 'fas fa-heart heart-full-screen');
+    } else {
+      heartIcon.setAttribute('class', 'fas fa-heart');
     }
   }
 }

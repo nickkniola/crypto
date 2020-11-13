@@ -165,6 +165,10 @@ i.heart-full-screen {
   right: 0
 }
 
+i.favorited {
+  color: #da1010;
+}
+
 .spinning-wheel {
   width: 30px;
 }
