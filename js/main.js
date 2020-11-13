@@ -1,5 +1,6 @@
 var navOpen = false;
 var cardFullScreen = false;
+var miniCardFullScreen = false;
 var favorite = false;
 var navButton = document.querySelector('i.fa-bars');
 var navBar = document.querySelector('header.nav-bar');
@@ -13,6 +14,7 @@ var spinningWheel = null;
 var fullPrice = null;
 var prevDateIncrementer = 0;
 var prevPrices = null;
+var miniCards = null;
 crypto.pastPrices = {};
 
 navButton.addEventListener('click', toggleNav);
@@ -87,7 +89,7 @@ function getName(cryptocurrency, date) {
       cardColumn.appendChild(cardCreator());
     }
     expandIcon = document.querySelector('i.fa-expand');
-    heartIcon = document.querySelector('i.fa-heart');
+    heartIcon = document.querySelector('i.fa-heart.main');
     cryptoCardText = document.querySelector('.crypto-card-text');
     horizontalRules = document.querySelectorAll('hr');
     prevPrices = document.querySelectorAll('.past-price');
@@ -204,7 +206,7 @@ function miniCardCreator(cryptoID) {
   miniCardDiv.setAttribute('class', 'mini-card');
 
   var expandIcon = document.createElement('i');
-  expandIcon.setAttribute('class', 'fas fa-expand');
+  expandIcon.setAttribute('class', 'fas fa-expand mini');
   miniCardDiv.appendChild(expandIcon);
 
   var cardTextDiv = document.createElement('div');
@@ -284,7 +286,7 @@ function miniCardCreator(cryptoID) {
   cardTextDiv.appendChild(fiveYearsElement);
 
   var heartIcon = document.createElement('i');
-  heartIcon.setAttribute('class', 'fas fa-heart mini');
+  heartIcon.setAttribute('class', 'fas fa-heart mini shrunk');
   miniCardDiv.appendChild(heartIcon);
 
   return miniCardDiv;
@@ -301,17 +303,19 @@ function eventListenerExpandIcon() {
 
 function toggleFullScreen() {
   cardFullScreen = !cardFullScreen;
+  miniCards = document.querySelectorAll('.mini-card');
   if (cardFullScreen) {
     if (favorite) {
-      heartIcon.setAttribute('class', 'fas fa-heart heart-full-screen favorited');
+      heartIcon.setAttribute('class', 'fas fa-heart main heart-full-screen favorited');
     } else {
-      heartIcon.setAttribute('class', 'fas fa-heart heart-full-screen');
+      heartIcon.setAttribute('class', 'fas fa-heart main heart-full-screen');
     }
     mainCard.setAttribute('class', 'col card card-full-screen');
     cryptoCardText.setAttribute('class', 'crypto-card-text text-full-screen');
     horizontalRules[0].setAttribute('class', '');
     horizontalRules[1].setAttribute('class', '');
     prevPrices.forEach(el => el.setAttribute('class', 'past-price'));
+    miniCards.forEach(el => el.setAttribute('class', 'mini-card hidden'));
   } else {
     if (favorite) {
       heartIcon.setAttribute('class', 'fas fa-heart main favorited');
@@ -323,6 +327,7 @@ function toggleFullScreen() {
     horizontalRules[0].setAttribute('class', 'hidden');
     horizontalRules[1].setAttribute('class', 'hidden');
     prevPrices.forEach(el => el.setAttribute('class', 'past-price hidden'));
+    miniCards.forEach(el => el.setAttribute('class', 'mini-card'));
   }
 }
 
@@ -373,7 +378,7 @@ function findPastPrice(cryptocurrency, date, daysAgo) {
 
 function toggleFavorite() {
   favorite = !favorite;
-
+  heartIcon = document.querySelector('i.fa-heart.main');
   if (favorite) {
     heartIcon.setAttribute('class', heartIcon.className + ' favorited');
     // eslint-disable-next-line no-undef
@@ -397,9 +402,39 @@ function toggleFavorite() {
     }
   } else {
     if (heartIcon.className.includes('heart-full-screen')) {
-      heartIcon.setAttribute('class', 'fas fa-heart heart-full-screen');
+      heartIcon.setAttribute('class', 'fas fa-heart main heart-full-screen');
     } else {
       heartIcon.setAttribute('class', 'fas fa-heart main');
+    }
+  }
+}
+
+miniCardRow.addEventListener('click', toggleMiniFullScreen);
+
+function toggleMiniFullScreen(event) {
+  var miniExpandIcons = document.querySelectorAll('.fa-expand.mini');
+  miniCards = document.querySelectorAll('.mini-card');
+  // heartIcon = document.querySelector('i.fa-heart.mini');
+  miniCardFullScreen = !miniCardFullScreen;
+  if (miniCardFullScreen) {
+    if (event.target.className.includes(miniExpandIcons[0].className)) {
+      miniCards.forEach(el => el.setAttribute('class', 'mini-card hidden'));
+      event.target.closest('.mini-card').setAttribute('class', 'mini-card-full-screen');
+      prevPrices = document.querySelectorAll('.mini-card-full-screen .past-price');
+      prevPrices.forEach(el => el.setAttribute('class', 'past-price'));
+      event.target.nextElementSibling.nextElementSibling.setAttribute('class', 'fas fa-heart mini heart-full-screen');
+      event.target.nextElementSibling.children[0].setAttribute('class', '');
+      event.target.nextElementSibling.children[2].setAttribute('class', '');
+    }
+  } else {
+    if (event.target.className.includes(miniExpandIcons[0].className)) {
+      miniCards.forEach(el => el.setAttribute('class', 'mini-card'));
+      event.target.closest('.mini-card-full-screen').setAttribute('class', 'mini-card');
+      prevPrices = document.querySelectorAll('.mini-card .past-price');
+      prevPrices.forEach(el => el.setAttribute('class', 'past-price hidden'));
+      event.target.nextElementSibling.nextElementSibling.setAttribute('class', 'fas fa-heart mini shrunk');
+      event.target.nextElementSibling.children[0].setAttribute('class', 'hidden');
+      event.target.nextElementSibling.children[2].setAttribute('class', 'hidden');
     }
   }
 }
