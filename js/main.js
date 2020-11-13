@@ -193,11 +193,105 @@ function cardCreator() {
   cardTextDiv.appendChild(fiveYearsElement);
 
   var heartIcon = document.createElement('i');
-  heartIcon.setAttribute('class', 'fas fa-heart');
+  heartIcon.setAttribute('class', 'fas fa-heart main');
   cardDiv.appendChild(heartIcon);
 
   return cardDiv;
 }
+
+function miniCardCreator(cryptoID) {
+  var miniCardDiv = document.createElement('div');
+  miniCardDiv.setAttribute('class', 'mini-card');
+
+  var expandIcon = document.createElement('i');
+  expandIcon.setAttribute('class', 'fas fa-expand');
+  miniCardDiv.appendChild(expandIcon);
+
+  var cardTextDiv = document.createElement('div');
+  cardTextDiv.setAttribute('class', 'mini-crypto-card-text');
+  miniCardDiv.appendChild(cardTextDiv);
+
+  var horizontalRule1 = document.createElement('hr');
+  horizontalRule1.setAttribute('class', 'hidden');
+  cardTextDiv.appendChild(horizontalRule1);
+
+  var h4Element = document.createElement('h4');
+  h4Element.textContent = favorites[cryptoID].name;
+  var span = document.createElement('span');
+  span.setAttribute('class', 'symbol');
+  span.textContent = ' (' + favorites[cryptoID].symbol + ' - USD)';
+  h4Element.appendChild(span);
+  cardTextDiv.appendChild(h4Element);
+
+  var horizontalRule2 = document.createElement('hr');
+  horizontalRule2.setAttribute('class', 'hidden');
+  cardTextDiv.appendChild(horizontalRule2);
+
+  var pElement = document.createElement('p');
+  pElement.setAttribute('class', 'price');
+  pElement.textContent = 'Current Price: ';
+  var spanElement = document.createElement('span');
+  spanElement.textContent = '$' + favorites[cryptoID].price;
+  pElement.appendChild(spanElement);
+  cardTextDiv.appendChild(pElement);
+
+  var prevWeekElement = document.createElement('p');
+  prevWeekElement.setAttribute('class', 'past-price hidden');
+  prevWeekElement.textContent = 'Prev. Week: ';
+  var spanPrevWeek = document.createElement('span');
+  spanPrevWeek.textContent = '$' + favorites[cryptoID].pastPrices.oneWeek;
+  prevWeekElement.appendChild(spanPrevWeek);
+  cardTextDiv.appendChild(prevWeekElement);
+
+  var prevMonthElement = document.createElement('p');
+  prevMonthElement.setAttribute('class', 'past-price hidden');
+  prevMonthElement.textContent = 'Prev. Month: ';
+  var spanPrevMonth = document.createElement('span');
+  spanPrevMonth.textContent = '$' + favorites[cryptoID].pastPrices.oneMonth;
+  prevMonthElement.appendChild(spanPrevMonth);
+  cardTextDiv.appendChild(prevMonthElement);
+
+  var threeMonthsElement = document.createElement('p');
+  threeMonthsElement.setAttribute('class', 'past-price hidden');
+  threeMonthsElement.textContent = '3 Months Ago: ';
+  var spanThreeMonths = document.createElement('span');
+  spanThreeMonths.textContent = '$' + favorites[cryptoID].pastPrices.threeMonths;
+  threeMonthsElement.appendChild(spanThreeMonths);
+  cardTextDiv.appendChild(threeMonthsElement);
+
+  var sixMonthsElement = document.createElement('p');
+  sixMonthsElement.setAttribute('class', 'past-price hidden');
+  sixMonthsElement.textContent = '6 Months Ago: ';
+  var spanSixMonths = document.createElement('span');
+  spanSixMonths.textContent = '$' + favorites[cryptoID].pastPrices.sixMonths;
+  sixMonthsElement.appendChild(spanSixMonths);
+  cardTextDiv.appendChild(sixMonthsElement);
+
+  var oneYearElement = document.createElement('p');
+  oneYearElement.setAttribute('class', 'past-price hidden');
+  oneYearElement.textContent = '1 Year Ago: ';
+  var spanOneYear = document.createElement('span');
+  spanOneYear.textContent = '$' + favorites[cryptoID].pastPrices.oneYear;
+  oneYearElement.appendChild(spanOneYear);
+  cardTextDiv.appendChild(oneYearElement);
+
+  var fiveYearsElement = document.createElement('p');
+  fiveYearsElement.setAttribute('class', 'past-price hidden');
+  fiveYearsElement.textContent = '5 Years Ago: ';
+  var spanFiveYears = document.createElement('span');
+  spanFiveYears.textContent = '$' + favorites[cryptoID].pastPrices.fiveYears;
+  fiveYearsElement.appendChild(spanFiveYears);
+  cardTextDiv.appendChild(fiveYearsElement);
+
+  var heartIcon = document.createElement('i');
+  heartIcon.setAttribute('class', 'fas fa-heart mini');
+  miniCardDiv.appendChild(heartIcon);
+
+  return miniCardDiv;
+}
+
+var miniCardRow = document.querySelector('div.mini-card-row');
+Object.keys(favorites).forEach(key => miniCardRow.appendChild(miniCardCreator(key)));
 
 function eventListenerExpandIcon() {
   mainCard = document.querySelector('div.col-card .card');
@@ -220,9 +314,9 @@ function toggleFullScreen() {
     prevPrices.forEach(el => el.setAttribute('class', 'past-price'));
   } else {
     if (favorite) {
-      heartIcon.setAttribute('class', 'fas fa-heart favorited');
+      heartIcon.setAttribute('class', 'fas fa-heart main favorited');
     } else {
-      heartIcon.setAttribute('class', 'fas fa-heart');
+      heartIcon.setAttribute('class', 'fas fa-heart main');
     }
     mainCard.setAttribute('class', 'col card');
     cryptoCardText.setAttribute('class', 'crypto-card-text');
@@ -281,7 +375,6 @@ function toggleFavorite() {
   favorite = !favorite;
 
   if (favorite) {
-    // change the color of the heart icon to red
     heartIcon.setAttribute('class', heartIcon.className + ' favorited');
     // eslint-disable-next-line no-undef
     if (!favorites || !Object.keys(favorites).includes(crypto.id)) {
@@ -302,11 +395,10 @@ function toggleFavorite() {
       };
     }
   } else {
-    // change the color of the heart icon back to initial grayish color
     if (heartIcon.className.includes('heart-full-screen')) {
       heartIcon.setAttribute('class', 'fas fa-heart heart-full-screen');
     } else {
-      heartIcon.setAttribute('class', 'fas fa-heart');
+      heartIcon.setAttribute('class', 'fas fa-heart main');
     }
   }
 }
