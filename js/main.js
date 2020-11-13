@@ -15,6 +15,7 @@ var fullPrice = null;
 var prevDateIncrementer = 0;
 var prevPrices = null;
 var miniCards = null;
+var miniCardsH4 = null;
 crypto.pastPrices = {};
 
 navButton.addEventListener('click', toggleNav);
@@ -407,6 +408,11 @@ function toggleFavorite() {
       heartIcon.setAttribute('class', 'fas fa-heart main');
     }
     delete favorites[crypto.id];
+    miniCards = document.querySelectorAll('.mini-card');
+    miniCardsH4 = document.querySelectorAll('.mini-crypto-card-text > h4');
+    if (miniCardsH4[miniCardsH4.length - 1].textContent.split(' ')[0].toLowerCase() === crypto.name.toLowerCase()) {
+      miniCards[miniCards.length - 1].remove();
+    }
   }
 }
 
