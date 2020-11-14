@@ -382,9 +382,7 @@ function toggleFavorite() {
   heartIcon = document.querySelector('i.fa-heart.main');
   if (favorite) {
     heartIcon.setAttribute('class', heartIcon.className + ' favorited');
-    // eslint-disable-next-line no-undef
     if (!favorites || !Object.keys(favorites).includes(crypto.id)) {
-      // eslint-disable-next-line no-undef
       favorites[crypto.id] = {
         id: crypto.id,
         name: crypto.name,
@@ -410,7 +408,7 @@ function toggleFavorite() {
     delete favorites[crypto.id];
     miniCards = document.querySelectorAll('.mini-card');
     miniCardsH4 = document.querySelectorAll('.mini-crypto-card-text > h4');
-    if (miniCardsH4[miniCardsH4.length - 1].textContent.split(' ')[0].toLowerCase() === crypto.name.toLowerCase()) {
+    if (miniCardsH4[miniCardsH4.length - 1].textContent.split(' (')[0] === crypto.name) {
       miniCards[miniCards.length - 1].remove();
     }
   }
@@ -443,4 +441,9 @@ function toggleMiniFullScreen(event) {
       event.target.nextElementSibling.children[2].setAttribute('class', 'hidden');
     }
   }
+  if (event.target.className.includes('fas fa-heart mini')) {
+    delete favorites[event.target.previousSibling.children[1].textContent.split(' (')[0].toLowerCase()];
+    event.target.closest('.mini-card').remove();
+  }
+
 }
