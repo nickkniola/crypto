@@ -18,6 +18,8 @@ var prevPrices = null;
 var miniCards = null;
 var miniCardsH4 = null;
 var navLinks = null;
+var form = null;
+var cardColumn = null;
 crypto.pastPrices = {};
 
 navButton.addEventListener('click', toggleNav);
@@ -60,7 +62,7 @@ function getPrice(cryptocurrency) {
   xhr.send();
 }
 
-var cardColumn = document.querySelector('div.col.col-card');
+cardColumn = document.querySelector('div.col.col-card');
 
 function getName(cryptocurrency, date) {
   cryptocurrency = cryptocurrency.replaceAll(' ', '-').toLowerCase();
@@ -76,7 +78,6 @@ function getName(cryptocurrency, date) {
   xhr.open('GET', 'https://api.coingecko.com/api/v3/coins/' + cryptocurrency + '/history?date=' + date);
   xhr.responseType = 'json';
   xhr.addEventListener('load', function () {
-
     if (xhr.response.id === undefined) {
       return;
     }
@@ -101,7 +102,7 @@ function getName(cryptocurrency, date) {
   xhr.send();
 }
 
-var form = document.querySelector('form');
+form = document.querySelector('form');
 
 form.addEventListener('submit', searchCrypto);
 
@@ -356,7 +357,6 @@ function findPastPrice(cryptocurrency, date, daysAgo) {
     } else {
       fullPrice = xhr.response.market_data.current_price.usd.toFixed(2).toString();
     }
-
     if (fullPrice.length === 7) {
       var firstHalf = fullPrice.slice(0, 1);
       var secondHalf = fullPrice.slice(1);
@@ -366,9 +366,7 @@ function findPastPrice(cryptocurrency, date, daysAgo) {
       secondHalf = fullPrice.slice(2);
       fullPrice = firstHalf + ',' + secondHalf;
     }
-
     crypto.pastPrices[daysAgo] = fullPrice;
-
     if (prevDateIncrementer < 5) {
       prevDateIncrementer++;
     } else if (prevDateIncrementer === 5) {
