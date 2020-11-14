@@ -2,6 +2,7 @@ var navOpen = false;
 var cardFullScreen = false;
 var miniCardFullScreen = false;
 var favorite = false;
+var favoritesView = false;
 var navButton = document.querySelector('i.fa-bars');
 var navBar = document.querySelector('header.nav-bar');
 var navRows = document.querySelectorAll('.nav-row.item');
@@ -16,6 +17,7 @@ var prevDateIncrementer = 0;
 var prevPrices = null;
 var miniCards = null;
 var miniCardsH4 = null;
+var navLinks = null;
 crypto.pastPrices = {};
 
 navButton.addEventListener('click', toggleNav);
@@ -432,8 +434,13 @@ function toggleMiniFullScreen(event) {
     }
   } else {
     if (event.target.className.includes(miniExpandIcons[0].className)) {
-      miniCards.forEach(el => el.setAttribute('class', 'mini-card'));
-      event.target.closest('.mini-card-full-screen').setAttribute('class', 'mini-card');
+      if (favoritesView) {
+        miniCards.forEach(miniCard => miniCard.setAttribute('class', 'mini-card favorites-view'));
+        event.target.closest('.mini-card-full-screen').setAttribute('class', 'mini-card favorites-view');
+      } else {
+        miniCards.forEach(el => el.setAttribute('class', 'mini-card'));
+        event.target.closest('.mini-card-full-screen').setAttribute('class', 'mini-card');
+      }
       prevPrices = document.querySelectorAll('.mini-card .past-price');
       prevPrices.forEach(el => el.setAttribute('class', 'past-price hidden'));
       event.target.nextElementSibling.nextElementSibling.setAttribute('class', 'fas fa-heart mini shrunk');
@@ -445,5 +452,25 @@ function toggleMiniFullScreen(event) {
     delete favorites[event.target.previousSibling.children[1].textContent.split(' (')[0].toLowerCase()];
     event.target.closest('.mini-card').remove();
   }
+}
 
+navLinks = document.querySelector('div.nav-links');
+navLinks.addEventListener('click', viewSwapper);
+
+function viewSwapper(event) {
+  var searchedItem = document.querySelector('.container.searched-item');
+  var homeLink = document.querySelector('.nav-item.home');
+  var favoritesLink = document.querySelector('.nav-item.favorites');
+  miniCards = document.querySelectorAll('.mini-card');
+  if (event.target === favoritesLink) {
+    favoritesView = true;
+    form.setAttribute('class', 'hidden');
+    searchedItem.setAttribute('class', 'container searched-item hidden');
+    miniCards.forEach(miniCard => miniCard.setAttribute('class', 'mini-card favorites-view'));
+  } else if (event.target === homeLink) {
+    favoritesView = false;
+    form.setAttribute('class', '');
+    searchedItem.setAttribute('class', 'container searched-item');
+    miniCards.forEach(miniCard => miniCard.setAttribute('class', 'mini-card'));
+  }
 }
