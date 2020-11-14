@@ -141,7 +141,7 @@ i.fa-heart.main {
 
 i.fa-heart.mini.shrunk {
   position: relative;
-  left: 89%;
+  left: 90%;
   color: #da1010;
 }
 
@@ -222,6 +222,10 @@ i.fa-heart.mini.heart-full-screen {
 .mini-card-full-screen p.price {
   font-size: 20px;
   margin-bottom: 2rem;
+}
+
+.mini-card.favorites-view {
+  width: 100%;
 }
 
 .spinning-wheel {
