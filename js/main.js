@@ -20,6 +20,7 @@ var miniCardsH4 = null;
 var navLinks = null;
 var form = null;
 var cardColumn = null;
+var h3NotFound = null;
 crypto.pastPrices = {};
 
 navButton.addEventListener('click', toggleNav);
@@ -39,11 +40,22 @@ function toggleNav() {
 }
 
 function getPrice(cryptocurrency) {
+  h3NotFound = document.querySelector('h3.not-found');
   cryptocurrency = cryptocurrency.replaceAll(' ', '-').toLowerCase();
   var xhr = new XMLHttpRequest();
   xhr.open('GET', 'https://api.coingecko.com/api/v3/simple/price?ids=' + cryptocurrency + '&vs_currencies=usd');
   xhr.responseType = 'json';
   xhr.addEventListener('load', function () {
+    if (h3NotFound) {
+      cardColumn.removeChild(h3NotFound);
+    }
+
+    if (xhr.response[cryptocurrency] === undefined) {
+      cardColumn.removeChild(mainCard);
+      cardColumn.appendChild(errorTextCreator());
+      return;
+    }
+
     fullPrice = xhr.response[cryptocurrency].usd.toFixed(2).toString();
     if (fullPrice.length >= 8) {
       var firstHalf = fullPrice.slice(0, 2);
@@ -471,4 +483,12 @@ function viewSwapper(event) {
     searchedItem.setAttribute('class', 'container searched-item');
     miniCards.forEach(miniCard => miniCard.setAttribute('class', 'mini-card'));
   }
+}
+
+function errorTextCreator() {
+  var h3Element = document.createElement('h3');
+  h3Element.setAttribute('class', 'not-found');
+  h3Element.textContent = 'Cryptocurrency not found.';
+
+  return h3Element;
 }
