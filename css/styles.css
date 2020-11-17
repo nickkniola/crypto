@@ -58,7 +58,7 @@ div.container.form {
 
 input {
   height: 35px;
-  width: 12rem;
+  width: 11.2rem;
   border: 1px solid black;
   outline: none;
   padding: 0.2rem;
@@ -67,7 +67,7 @@ input {
 
 button.search {
   height: 35px;
-  width: 7rem;
+  width: 6.5rem;
   border: none;
   border-radius: 5px;
   outline: none;
@@ -82,6 +82,7 @@ button.search:hover {
 
 .col-card {
   height: 12rem;
+  width: 100%;
 }
 
 .card {
@@ -141,7 +142,7 @@ i.fa-heart.main {
 
 i.fa-heart.mini.shrunk {
   position: relative;
-  left: 90%;
+  left: 88%;
   color: #da1010;
 }
 
@@ -230,8 +231,82 @@ i.fa-heart.mini.heart-full-screen {
 
 .spinning-wheel {
   width: 30px;
+  position: relative;
+  left: 50%;
+  top: 50%;
 }
 
 i.fa-heart.main.favorited {
   color: #da1010;
+}
+
+@media only screen and (min-width: 768px) {
+  div.col-card {
+    width: 50%;
+  }
+  div.mini-card-row {
+    width: 55%;
+    margin: auto;
+    display: flex;
+  }
+  div.mini-card.favorites-view {
+    width: 70%;
+    height: 10rem;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  div.col.card.card-full-screen, div.mini-card-full-screen {
+    height: 94.5vh;
+  }
+}
+
+@media only screen and (min-width: 1024px) {
+  div.col-card {
+    width: 30%;
+    height: 15rem;
+  }
+   div.col-card .card {
+    height: 100%;
+  }
+
+  div.col-card .card .crypto-card-text {
+    margin-top: 2rem;
+  }
+  div.mini-card-row {
+    width: 40%;
+    margin: auto;
+    display: flex;
+  }
+  div.mini-card.favorites-view {
+    width: 70%;
+    height: 12rem;
+    margin-left: auto;
+    margin-right: auto;
+    position: relative;
+  }
+
+  div.mini-card {
+    height: 12rem;
+    position: relative;
+
+  }
+
+  div.mini-card.favorites-view .fa-heart.mini.shrunk {
+    position: absolute;
+    left: 96%;
+    bottom: 1%;
+  }
+
+  i.fa-heart.mini.shrunk {
+    position: absolute;
+    left: 95%;
+    bottom: 1%;
+  }
+
+  div.col.card.card-full-screen, div.mini-card-full-screen {
+    height: 94.5vh;
+  }
+  div.mini-card {
+    height: 9rem;
+  }
 }
