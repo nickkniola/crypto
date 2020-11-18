@@ -430,11 +430,14 @@ function toggleFavorite() {
     } else {
       heartIcon.setAttribute('class', 'fas fa-heart main');
     }
-    delete favorites[crypto.id];
+
     miniCards = document.querySelectorAll('.mini-card');
     miniCardsH4 = document.querySelectorAll('.mini-crypto-card-text > h4');
-    if (miniCardsH4[miniCardsH4.length - 1].textContent.split(' (')[0] === crypto.name) {
-      miniCards[miniCards.length - 1].remove();
+    for (var i = 0; i < miniCardsH4.length; i++) {
+      if (miniCardsH4[i].textContent.split(' (')[0] === crypto.name) {
+        miniCards[i].remove();
+        delete favorites[crypto.id];
+      }
     }
   }
 }
