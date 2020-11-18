@@ -232,8 +232,8 @@ i.fa-heart.mini.heart-full-screen {
 .spinning-wheel {
   width: 30px;
   position: relative;
-  left: 50%;
-  top: 50%;
+  left: calc(50% - 15px);
+  top: calc(50% - 15px);
 }
 
 i.fa-heart.main.favorited {
