@@ -3,124 +3,39 @@ var cardFullScreen = false;
 var miniCardFullScreen = false;
 var favorite = false;
 var favoritesView = false;
-var navButton = document.querySelector('i.fa-bars');
+var navToggler = document.querySelector('i.fa-bars');
 var navBar = document.querySelector('header.nav-bar');
-var navRows = document.querySelectorAll('.nav-row.item');
-var expandIcon = null;
-var heartIcon = null;
+var navContent = document.querySelectorAll('.nav-row.item');
+var navLinks = document.querySelector('div.nav-links');
+var form = document.querySelector('form');
+var miniCardRow = document.querySelector('div.mini-card-row');
 var mainCard = null;
+var cardColumn = null;
 var cryptoCardText = null;
 var horizontalRules = null;
 var spinningWheel = null;
 var fullPrice = null;
-var prevDateIncrementer = 0;
 var prevPrices = null;
 var miniCards = null;
 var miniCardsH4 = null;
-var navLinks = null;
-var form = null;
-var cardColumn = null;
-var h3NotFound = null;
-crypto.pastPrices = {};
+var expandIcon = null;
+var miniExpandIcons = null;
+var heartIcon = null;
+var errorText = null;
+var prevDateIncrementer = 0;
 
-navButton.addEventListener('click', toggleNav);
+Object.keys(favorites).forEach(key => miniCardRow.appendChild(miniCardCreator(key)));
 
-function toggleNav() {
-  navOpen = !navOpen;
-
-  if (navOpen) {
-    navBar.className = 'nav-bar opened';
-    navRows[0].className = 'nav-row item';
-    navRows[1].className = 'nav-row item';
-  } else {
-    navBar.className = 'nav-bar';
-    navRows[0].className = 'nav-row item hidden';
-    navRows[1].className = 'nav-row item hidden';
-  }
-}
-
-function getPrice(cryptocurrency) {
-  cardColumn = document.querySelector('div.col.col-card');
-  h3NotFound = document.querySelector('h3.not-found');
-  mainCard = document.querySelector('div.col.col-card div.card');
-  cryptocurrency = cryptocurrency.replaceAll(' ', '-').toLowerCase();
-  var xhr = new XMLHttpRequest();
-  xhr.open('GET', 'https://api.coingecko.com/api/v3/simple/price?ids=' + cryptocurrency + '&vs_currencies=usd');
-  xhr.responseType = 'json';
-  if (h3NotFound) {
-    cardColumn.removeChild(h3NotFound);
-  }
-  xhr.addEventListener('load', function () {
-    if (xhr.response[cryptocurrency] === undefined) {
-      if (mainCard) {
-        cardColumn.removeChild(mainCard);
-      }
-      cardColumn.appendChild(errorTextCreator());
-      spinningWheel.setAttribute('class', 'spinning-wheel hidden');
-      return;
-    }
-
-    fullPrice = xhr.response[cryptocurrency].usd.toFixed(2).toString();
-    if (fullPrice.length >= 8) {
-      var firstHalf = fullPrice.slice(0, 2);
-      var secondHalf = fullPrice.slice(2);
-      crypto.price = firstHalf + ',' + secondHalf;
-    } else {
-      crypto.price = fullPrice;
-    }
-    findPastPrice(cryptocurrency, dateGenerator(7), 'oneWeek');
-    findPastPrice(cryptocurrency, dateGenerator(30.41), 'oneMonth');
-    findPastPrice(cryptocurrency, dateGenerator(91.25), 'threeMonths');
-    findPastPrice(cryptocurrency, dateGenerator(182.5), 'sixMonths');
-    findPastPrice(cryptocurrency, dateGenerator(365), 'oneYear');
-    findPastPrice(cryptocurrency, dateGenerator(1825), 'fiveYears');
-  });
-  xhr.addEventListener('error', function () {
-    cardColumn.appendChild(networkErrorTextCreator());
-    spinningWheel.setAttribute('class', 'spinning-wheel hidden');
-  });
-  xhr.send();
-}
-
-function getName(cryptocurrency, date) {
-  cryptocurrency = cryptocurrency.replaceAll(' ', '-').toLowerCase();
-  mainCard = document.querySelector('div.col.col-card div.card');
-  spinningWheel = document.querySelector('img.spinning-wheel');
-  cardColumn = document.querySelector('div.col.col-card');
-  var xhr = new XMLHttpRequest();
-  xhr.open('GET', 'https://api.coingecko.com/api/v3/coins/' + cryptocurrency + '/history?date=' + date);
-  xhr.responseType = 'json';
-  xhr.addEventListener('load', function () {
-    if (xhr.response.id === undefined) {
-      return;
-    }
-    crypto.id = xhr.response.id;
-    crypto.name = xhr.response.name;
-    crypto.symbol = xhr.response.symbol.toUpperCase();
-
-    if (mainCard === null) {
-      spinningWheel.setAttribute('class', 'spinning-wheel hidden');
-      cardColumn.appendChild(cardCreator());
-    } else {
-      spinningWheel.setAttribute('class', 'spinning-wheel hidden');
-      cardColumn.appendChild(cardCreator());
-    }
-    expandIcon = document.querySelector('i.fa-expand');
-    heartIcon = document.querySelector('i.fa-heart.main');
-    cryptoCardText = document.querySelector('.crypto-card-text');
-    horizontalRules = document.querySelectorAll('hr');
-    prevPrices = document.querySelectorAll('.past-price');
-    eventListenerExpandIcon();
-  });
-  xhr.addEventListener('error', function () {
-    cardColumn.appendChild(networkErrorTextCreator());
-  });
-  xhr.send();
-}
-
-form = document.querySelector('form');
-
+navToggler.addEventListener('click', toggleNav);
+navLinks.addEventListener('click', viewSwapper);
 form.addEventListener('submit', searchCrypto);
+miniCardRow.addEventListener('click', toggleMiniFullScreen);
+
+function mainCardEventListeners() {
+  mainCard = document.querySelector('div.col-card .card');
+  expandIcon.addEventListener('click', toggleFullScreen);
+  heartIcon.addEventListener('click', toggleFavorite);
+}
 
 function searchCrypto(event) {
   event.preventDefault();
@@ -137,6 +52,122 @@ function searchCrypto(event) {
   var searchedCrypto = event.target.elements.cryptoName.value;
   getPrice(searchedCrypto);
   form.reset();
+}
+
+function getPrice(cryptocurrency) {
+  cardColumn = document.querySelector('div.col.col-card');
+  mainCard = document.querySelector('div.col.col-card div.card');
+  cryptocurrency = cryptocurrency.replaceAll(' ', '-').toLowerCase();
+  var xhr = new XMLHttpRequest();
+  xhr.open('GET', 'https://api.coingecko.com/api/v3/simple/price?ids=' + cryptocurrency + '&vs_currencies=usd');
+  xhr.responseType = 'json';
+  if (errorText) {
+    cardColumn.removeChild(errorText);
+  }
+
+  xhr.addEventListener('load', function () {
+    if (xhr.response[cryptocurrency] === undefined) {
+      if (mainCard) {
+        cardColumn.removeChild(mainCard);
+      }
+      cardColumn.appendChild(errorTextCreator());
+      spinningWheel.setAttribute('class', 'spinning-wheel hidden');
+
+      return;
+    }
+    fullPrice = xhr.response[cryptocurrency].usd.toFixed(2).toString();
+    if (fullPrice.length >= 8) {
+      var firstHalf = fullPrice.slice(0, 2);
+      var secondHalf = fullPrice.slice(2);
+      crypto.price = firstHalf + ',' + secondHalf;
+    } else {
+      crypto.price = fullPrice;
+    }
+    findPastPrice(cryptocurrency, dateGenerator(7), 'oneWeek');
+    findPastPrice(cryptocurrency, dateGenerator(30.41), 'oneMonth');
+    findPastPrice(cryptocurrency, dateGenerator(91.25), 'threeMonths');
+    findPastPrice(cryptocurrency, dateGenerator(182.5), 'sixMonths');
+    findPastPrice(cryptocurrency, dateGenerator(365), 'oneYear');
+    findPastPrice(cryptocurrency, dateGenerator(1825), 'fiveYears');
+  });
+
+  xhr.addEventListener('error', function () {
+    cardColumn.appendChild(networkErrorTextCreator());
+    spinningWheel.setAttribute('class', 'spinning-wheel hidden');
+  });
+
+  xhr.send();
+}
+
+function getName(cryptocurrency, date) {
+  cryptocurrency = cryptocurrency.replaceAll(' ', '-').toLowerCase();
+  mainCard = document.querySelector('div.col.col-card div.card');
+  spinningWheel = document.querySelector('img.spinning-wheel');
+  cardColumn = document.querySelector('div.col.col-card');
+  var xhr = new XMLHttpRequest();
+  xhr.open('GET', 'https://api.coingecko.com/api/v3/coins/' + cryptocurrency + '/history?date=' + date);
+  xhr.responseType = 'json';
+
+  xhr.addEventListener('load', function () {
+    if (xhr.response.id === undefined) {
+
+      return;
+    }
+    crypto.id = xhr.response.id;
+    crypto.name = xhr.response.name;
+    crypto.symbol = xhr.response.symbol.toUpperCase();
+    if (mainCard === null) {
+      spinningWheel.setAttribute('class', 'spinning-wheel hidden');
+      cardColumn.appendChild(cardCreator());
+    } else {
+      spinningWheel.setAttribute('class', 'spinning-wheel hidden');
+      cardColumn.appendChild(cardCreator());
+    }
+    expandIcon = document.querySelector('i.fa-expand');
+    heartIcon = document.querySelector('i.fa-heart.main');
+    cryptoCardText = document.querySelector('.crypto-card-text');
+    horizontalRules = document.querySelectorAll('hr');
+    prevPrices = document.querySelectorAll('.past-price');
+    mainCardEventListeners();
+  });
+
+  xhr.addEventListener('error', function () {
+    cardColumn.appendChild(networkErrorTextCreator());
+  });
+
+  xhr.send();
+}
+
+function findPastPrice(cryptocurrency, date, daysAgo) {
+  var xhr = new XMLHttpRequest();
+  xhr.open('GET', 'https://api.coingecko.com/api/v3/coins/' + cryptocurrency + '/history?date=' + date);
+  xhr.responseType = 'json';
+
+  xhr.addEventListener('load', function () {
+    if (!xhr.response.market_data) {
+      fullPrice = 'N/A';
+    } else {
+      fullPrice = xhr.response.market_data.current_price.usd.toFixed(2).toString();
+    }
+    if (fullPrice.length === 7) {
+      var firstHalf = fullPrice.slice(0, 1);
+      var secondHalf = fullPrice.slice(1);
+      fullPrice = firstHalf + ',' + secondHalf;
+    } else if (fullPrice.length === 8) {
+      firstHalf = fullPrice.slice(0, 2);
+      secondHalf = fullPrice.slice(2);
+      fullPrice = firstHalf + ',' + secondHalf;
+    }
+    crypto.pastPrices[daysAgo] = fullPrice;
+    if (prevDateIncrementer < 5) {
+      prevDateIncrementer++;
+    } else if (prevDateIncrementer === 5) {
+      prevDateIncrementer = 0;
+      getName(cryptocurrency, dateGenerator(0));
+    }
+  });
+
+  xhr.send();
 }
 
 function cardCreator() {
@@ -321,13 +352,35 @@ function miniCardCreator(cryptoID) {
   return miniCardDiv;
 }
 
-var miniCardRow = document.querySelector('div.mini-card-row');
-Object.keys(favorites).forEach(key => miniCardRow.appendChild(miniCardCreator(key)));
+function viewSwapper(event) {
+  var searchedItem = document.querySelector('.container.searched-item');
+  var homeLink = document.querySelector('.nav-item.home');
+  var favoritesLink = document.querySelector('.nav-item.favorites');
+  miniCards = document.querySelectorAll('.mini-card');
+  if (event.target === favoritesLink) {
+    favoritesView = true;
+    form.setAttribute('class', 'hidden');
+    searchedItem.setAttribute('class', 'container searched-item hidden');
+    miniCards.forEach(miniCard => miniCard.setAttribute('class', 'mini-card favorites-view'));
+  } else if (event.target === homeLink) {
+    favoritesView = false;
+    form.setAttribute('class', '');
+    searchedItem.setAttribute('class', 'container searched-item');
+    miniCards.forEach(miniCard => miniCard.setAttribute('class', 'mini-card'));
+  }
+}
 
-function eventListenerExpandIcon() {
-  mainCard = document.querySelector('div.col-card .card');
-  expandIcon.addEventListener('click', toggleFullScreen);
-  heartIcon.addEventListener('click', toggleFavorite);
+function toggleNav() {
+  navOpen = !navOpen;
+  if (navOpen) {
+    navBar.className = 'nav-bar opened';
+    navContent[0].className = 'nav-row item';
+    navContent[1].className = 'nav-row item';
+  } else {
+    navBar.className = 'nav-bar';
+    navContent[0].className = 'nav-row item hidden';
+    navContent[1].className = 'nav-row item hidden';
+  }
 }
 
 function toggleFullScreen() {
@@ -360,46 +413,41 @@ function toggleFullScreen() {
   }
 }
 
-function dateGenerator(daysAgo) {
-  var millisecondsAgo = daysAgo * 86400000;
-  var currentMilliseconds = Date.now();
-  var resultMilliseconds = currentMilliseconds - millisecondsAgo;
-  var date = new Date(resultMilliseconds);
-  var day = date.getDate();
-  var month = date.getMonth() + 1;
-  var year = date.getFullYear();
-  var fullDate = day + '-' + month + '-' + year;
-  return fullDate;
-}
-
-function findPastPrice(cryptocurrency, date, daysAgo) {
-  var xhr = new XMLHttpRequest();
-  xhr.open('GET', 'https://api.coingecko.com/api/v3/coins/' + cryptocurrency + '/history?date=' + date);
-  xhr.responseType = 'json';
-  xhr.addEventListener('load', function () {
-    if (!xhr.response.market_data) {
-      fullPrice = 'N/A';
-    } else {
-      fullPrice = xhr.response.market_data.current_price.usd.toFixed(2).toString();
+function toggleMiniFullScreen(event) {
+  miniExpandIcons = document.querySelectorAll('.fa-expand.mini');
+  miniCards = document.querySelectorAll('.mini-card');
+  if (!miniCardFullScreen) {
+    if (event.target.className.includes(miniExpandIcons[0].className)) {
+      miniCards.forEach(el => el.setAttribute('class', 'mini-card hidden'));
+      event.target.closest('.mini-card').setAttribute('class', 'mini-card-full-screen');
+      prevPrices = document.querySelectorAll('.mini-card-full-screen .past-price');
+      prevPrices.forEach(el => el.setAttribute('class', 'past-price'));
+      event.target.nextElementSibling.nextElementSibling.setAttribute('class', 'fas fa-heart mini heart-full-screen');
+      event.target.nextElementSibling.children[0].setAttribute('class', '');
+      event.target.nextElementSibling.children[2].setAttribute('class', '');
+      miniCardFullScreen = true;
     }
-    if (fullPrice.length === 7) {
-      var firstHalf = fullPrice.slice(0, 1);
-      var secondHalf = fullPrice.slice(1);
-      fullPrice = firstHalf + ',' + secondHalf;
-    } else if (fullPrice.length === 8) {
-      firstHalf = fullPrice.slice(0, 2);
-      secondHalf = fullPrice.slice(2);
-      fullPrice = firstHalf + ',' + secondHalf;
+  } else {
+    if (event.target.className.includes(miniExpandIcons[0].className)) {
+      if (favoritesView) {
+        miniCards.forEach(miniCard => miniCard.setAttribute('class', 'mini-card favorites-view'));
+        event.target.closest('.mini-card-full-screen').setAttribute('class', 'mini-card favorites-view');
+      } else {
+        miniCards.forEach(el => el.setAttribute('class', 'mini-card'));
+        event.target.closest('.mini-card-full-screen').setAttribute('class', 'mini-card');
+      }
+      prevPrices = document.querySelectorAll('.mini-card .past-price');
+      prevPrices.forEach(el => el.setAttribute('class', 'past-price hidden'));
+      event.target.nextElementSibling.nextElementSibling.setAttribute('class', 'fas fa-heart mini shrunk');
+      event.target.nextElementSibling.children[0].setAttribute('class', 'hidden');
+      event.target.nextElementSibling.children[2].setAttribute('class', 'hidden');
+      miniCardFullScreen = false;
     }
-    crypto.pastPrices[daysAgo] = fullPrice;
-    if (prevDateIncrementer < 5) {
-      prevDateIncrementer++;
-    } else if (prevDateIncrementer === 5) {
-      prevDateIncrementer = 0;
-      getName(cryptocurrency, dateGenerator(0));
-    }
-  });
-  xhr.send();
+  }
+  if (event.target.className.includes('fas fa-heart mini')) {
+    delete favorites[event.target.previousSibling.children[1].textContent.split(' (')[0].toLowerCase()];
+    event.target.closest('.mini-card').remove();
+  }
 }
 
 function toggleFavorite() {
@@ -430,7 +478,6 @@ function toggleFavorite() {
     } else {
       heartIcon.setAttribute('class', 'fas fa-heart main');
     }
-
     miniCards = document.querySelectorAll('.mini-card');
     miniCardsH4 = document.querySelectorAll('.mini-crypto-card-text > h4');
     for (var i = 0; i < miniCardsH4.length; i++) {
@@ -442,77 +489,31 @@ function toggleFavorite() {
   }
 }
 
-miniCardRow.addEventListener('click', toggleMiniFullScreen);
+function dateGenerator(daysAgo) {
+  var millisecondsAgo = daysAgo * 86400000;
+  var currentMilliseconds = Date.now();
+  var resultMilliseconds = currentMilliseconds - millisecondsAgo;
+  var date = new Date(resultMilliseconds);
+  var day = date.getDate();
+  var month = date.getMonth() + 1;
+  var year = date.getFullYear();
+  var fullDate = day + '-' + month + '-' + year;
 
-function toggleMiniFullScreen(event) {
-  var miniExpandIcons = document.querySelectorAll('.fa-expand.mini');
-  miniCards = document.querySelectorAll('.mini-card');
-  miniCardFullScreen = !miniCardFullScreen;
-  if (miniCardFullScreen) {
-    if (event.target.className.includes(miniExpandIcons[0].className)) {
-      miniCards.forEach(el => el.setAttribute('class', 'mini-card hidden'));
-      event.target.closest('.mini-card').setAttribute('class', 'mini-card-full-screen');
-      prevPrices = document.querySelectorAll('.mini-card-full-screen .past-price');
-      prevPrices.forEach(el => el.setAttribute('class', 'past-price'));
-      event.target.nextElementSibling.nextElementSibling.setAttribute('class', 'fas fa-heart mini heart-full-screen');
-      event.target.nextElementSibling.children[0].setAttribute('class', '');
-      event.target.nextElementSibling.children[2].setAttribute('class', '');
-    }
-  } else {
-    if (event.target.className.includes(miniExpandIcons[0].className)) {
-      if (favoritesView) {
-        miniCards.forEach(miniCard => miniCard.setAttribute('class', 'mini-card favorites-view'));
-        event.target.closest('.mini-card-full-screen').setAttribute('class', 'mini-card favorites-view');
-      } else {
-        miniCards.forEach(el => el.setAttribute('class', 'mini-card'));
-        event.target.closest('.mini-card-full-screen').setAttribute('class', 'mini-card');
-      }
-      prevPrices = document.querySelectorAll('.mini-card .past-price');
-      prevPrices.forEach(el => el.setAttribute('class', 'past-price hidden'));
-      event.target.nextElementSibling.nextElementSibling.setAttribute('class', 'fas fa-heart mini shrunk');
-      event.target.nextElementSibling.children[0].setAttribute('class', 'hidden');
-      event.target.nextElementSibling.children[2].setAttribute('class', 'hidden');
-    }
-  }
-  if (event.target.className.includes('fas fa-heart mini')) {
-    delete favorites[event.target.previousSibling.children[1].textContent.split(' (')[0].toLowerCase()];
-    event.target.closest('.mini-card').remove();
-  }
-}
-
-navLinks = document.querySelector('div.nav-links');
-navLinks.addEventListener('click', viewSwapper);
-
-function viewSwapper(event) {
-  var searchedItem = document.querySelector('.container.searched-item');
-  var homeLink = document.querySelector('.nav-item.home');
-  var favoritesLink = document.querySelector('.nav-item.favorites');
-  miniCards = document.querySelectorAll('.mini-card');
-  if (event.target === favoritesLink) {
-    favoritesView = true;
-    form.setAttribute('class', 'hidden');
-    searchedItem.setAttribute('class', 'container searched-item hidden');
-    miniCards.forEach(miniCard => miniCard.setAttribute('class', 'mini-card favorites-view'));
-  } else if (event.target === homeLink) {
-    favoritesView = false;
-    form.setAttribute('class', '');
-    searchedItem.setAttribute('class', 'container searched-item');
-    miniCards.forEach(miniCard => miniCard.setAttribute('class', 'mini-card'));
-  }
+  return fullDate;
 }
 
 function errorTextCreator() {
-  var h3Element = document.createElement('h3');
-  h3Element.setAttribute('class', 'not-found');
-  h3Element.textContent = 'Cryptocurrency not found.';
+  errorText = document.createElement('h3');
+  errorText.setAttribute('class', 'not-found');
+  errorText.textContent = 'Cryptocurrency not found.';
 
-  return h3Element;
+  return errorText;
 }
 
 function networkErrorTextCreator() {
-  var h3Element = document.createElement('h3');
-  h3Element.setAttribute('class', 'not-found');
-  h3Element.textContent = 'Network Error. Please Try Again.';
+  errorText = document.createElement('h3');
+  errorText.setAttribute('class', 'not-found');
+  errorText.textContent = 'Network Error. Please Try Again.';
 
-  return h3Element;
+  return errorText;
 }
