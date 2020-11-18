@@ -21,6 +21,10 @@ body {
   color: black;
 }
 
+.nav-item:hover {
+  color: #1a69d9;
+}
+
 .nav-item:link {
   text-decoration: none;
 }
@@ -58,7 +62,7 @@ div.container.form {
 
 input {
   height: 35px;
-  width: 12rem;
+  width: 11.2rem;
   border: 1px solid black;
   outline: none;
   padding: 0.2rem;
@@ -67,7 +71,7 @@ input {
 
 button.search {
   height: 35px;
-  width: 7rem;
+  width: 6.5rem;
   border: none;
   border-radius: 5px;
   outline: none;
@@ -81,7 +85,8 @@ button.search:hover {
 }
 
 .col-card {
-  height: 12rem;
+  min-height: 12rem;
+  width: 100%;
 }
 
 .card {
@@ -123,7 +128,7 @@ i.fa-expand, i.fa-heart.main {
 
 i.fa-heart.main {
   position: relative;
-  left: 91%;
+  left: calc(100% - 30px);
 }
 
 .mini-card-row {
@@ -141,7 +146,7 @@ i.fa-heart.main {
 
 i.fa-heart.mini.shrunk {
   position: relative;
-  left: 90%;
+  left: calc(100% - 20px);
   color: #da1010;
 }
 
@@ -230,8 +235,92 @@ i.fa-heart.mini.heart-full-screen {
 
 .spinning-wheel {
   width: 30px;
+  position: relative;
+  left: calc(50% - 15px);
+  top: calc(50% - 15px);
 }
 
 i.fa-heart.main.favorited {
   color: #da1010;
+}
+
+@media only screen and (min-width: 768px) {
+  div.col-card {
+    width: 50%;
+  }
+
+  div.mini-card-row {
+    width: 55%;
+    margin: auto;
+    display: flex;
+  }
+
+  div.mini-card.favorites-view {
+    width: 70%;
+
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  div.col.card.card-full-screen, div.mini-card-full-screen {
+    height: 94.5vh;
+  }
+
+  i.fa-heart.mini.heart-full-screen {
+    position: absolute;
+    left: calc(100% - 30px);
+  }
+}
+
+@media only screen and (min-width: 1024px) {
+  div.col-card {
+    width: 30%;
+    height: 15rem;
+  }
+
+   div.col-card .card {
+    height: 100%;
+  }
+
+  div.col-card .card .crypto-card-text {
+    margin-top: 2rem;
+  }
+
+  div.mini-card-row {
+    width: 50%;
+    margin: auto;
+    display: flex;
+  }
+
+  div.mini-card.favorites-view {
+    width: 70%;
+    margin-left: auto;
+    margin-right: auto;
+    position: relative;
+  }
+
+  div.mini-card {
+    position: relative;
+  }
+
+  div.col.card.card-full-screen, div.mini-card-full-screen {
+    height: 94.5vh;
+  }
+
+  h3 {
+    font-size: 24px;
+  }
+
+  .mini-card-row h4 {
+    font-size: 18px;
+  }
+
+  p.price {
+    font-size: 16px;
+  }
+
+  i.fa-heart.main {
+    position: relative;
+    bottom: -10%;
+  }
 }

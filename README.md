@@ -1,3 +1,3 @@
-# ajax-project-template
+# crypto
 
-A dynamic HTML, CSS, and JavaScript solo project.
+Quickly track prices of cryptocurrencies and save favorites, with up-to-date information

@@ -20,6 +20,7 @@ var miniCardsH4 = null;
 var navLinks = null;
 var form = null;
 var cardColumn = null;
+var h3NotFound = null;
 crypto.pastPrices = {};
 
 navButton.addEventListener('click', toggleNav);
@@ -39,11 +40,26 @@ function toggleNav() {
 }
 
 function getPrice(cryptocurrency) {
+  cardColumn = document.querySelector('div.col.col-card');
+  h3NotFound = document.querySelector('h3.not-found');
+  mainCard = document.querySelector('div.col.col-card div.card');
   cryptocurrency = cryptocurrency.replaceAll(' ', '-').toLowerCase();
   var xhr = new XMLHttpRequest();
   xhr.open('GET', 'https://api.coingecko.com/api/v3/simple/price?ids=' + cryptocurrency + '&vs_currencies=usd');
   xhr.responseType = 'json';
+  if (h3NotFound) {
+    cardColumn.removeChild(h3NotFound);
+  }
   xhr.addEventListener('load', function () {
+    if (xhr.response[cryptocurrency] === undefined) {
+      if (mainCard) {
+        cardColumn.removeChild(mainCard);
+      }
+      cardColumn.appendChild(errorTextCreator());
+      spinningWheel.setAttribute('class', 'spinning-wheel hidden');
+      return;
+    }
+
     fullPrice = xhr.response[cryptocurrency].usd.toFixed(2).toString();
     if (fullPrice.length >= 8) {
       var firstHalf = fullPrice.slice(0, 2);
@@ -59,21 +75,18 @@ function getPrice(cryptocurrency) {
     findPastPrice(cryptocurrency, dateGenerator(365), 'oneYear');
     findPastPrice(cryptocurrency, dateGenerator(1825), 'fiveYears');
   });
+  xhr.addEventListener('error', function () {
+    cardColumn.appendChild(networkErrorTextCreator());
+    spinningWheel.setAttribute('class', 'spinning-wheel hidden');
+  });
   xhr.send();
 }
-
-cardColumn = document.querySelector('div.col.col-card');
 
 function getName(cryptocurrency, date) {
   cryptocurrency = cryptocurrency.replaceAll(' ', '-').toLowerCase();
   mainCard = document.querySelector('div.col.col-card div.card');
   spinningWheel = document.querySelector('img.spinning-wheel');
-  if (mainCard === null) {
-    spinningWheel.setAttribute('class', 'spinning-wheel');
-  } else {
-    cardColumn.removeChild(mainCard);
-    spinningWheel.setAttribute('class', 'spinning-wheel');
-  }
+  cardColumn = document.querySelector('div.col.col-card');
   var xhr = new XMLHttpRequest();
   xhr.open('GET', 'https://api.coingecko.com/api/v3/coins/' + cryptocurrency + '/history?date=' + date);
   xhr.responseType = 'json';
@@ -99,6 +112,9 @@ function getName(cryptocurrency, date) {
     prevPrices = document.querySelectorAll('.past-price');
     eventListenerExpandIcon();
   });
+  xhr.addEventListener('error', function () {
+    cardColumn.appendChild(networkErrorTextCreator());
+  });
   xhr.send();
 }
 
@@ -108,6 +124,15 @@ form.addEventListener('submit', searchCrypto);
 
 function searchCrypto(event) {
   event.preventDefault();
+  mainCard = document.querySelector('div.col.col-card div.card');
+  spinningWheel = document.querySelector('img.spinning-wheel');
+  cardColumn = document.querySelector('div.col.col-card');
+  if (mainCard === null) {
+    spinningWheel.setAttribute('class', 'spinning-wheel');
+  } else {
+    cardColumn.removeChild(mainCard);
+    spinningWheel.setAttribute('class', 'spinning-wheel');
+  }
   favorite = false;
   var searchedCrypto = event.target.elements.cryptoName.value;
   getPrice(searchedCrypto);
@@ -471,4 +496,20 @@ function viewSwapper(event) {
     searchedItem.setAttribute('class', 'container searched-item');
     miniCards.forEach(miniCard => miniCard.setAttribute('class', 'mini-card'));
   }
+}
+
+function errorTextCreator() {
+  var h3Element = document.createElement('h3');
+  h3Element.setAttribute('class', 'not-found');
+  h3Element.textContent = 'Cryptocurrency not found.';
+
+  return h3Element;
+}
+
+function networkErrorTextCreator() {
+  var h3Element = document.createElement('h3');
+  h3Element.setAttribute('class', 'not-found');
+  h3Element.textContent = 'Network Error. Please Try Again.';
+
+  return h3Element;
 }
