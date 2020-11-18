@@ -274,7 +274,8 @@ i.fa-heart.main.favorited {
 
 @media only screen and (min-width: 1024px) {
   div.col-card {
-    width: 30%;
+    width: 45%;
+    max-width: 35rem;
     height: 15rem;
   }
 
