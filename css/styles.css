@@ -258,6 +258,19 @@ i.fa-heart.main.favorited {
   div.col.card.card-full-screen, div.mini-card-full-screen {
     height: 94.5vh;
   }
+  i.fa-heart.main {
+    position: relative;
+    left: calc(100% - 30px);
+  }
+  i.fa-heart.mini.shrunk{
+    position: relative;
+    left: calc(100% - 20px);
+  }
+  i.fa-heart.mini.heart-full-screen {
+    position: absolute;
+    left: calc(100% - 30px);
+  }
+
 }
 
 @media only screen and (min-width: 1024px) {
@@ -289,18 +302,6 @@ i.fa-heart.main.favorited {
     height: 12rem;
     position: relative;
 
-  }
-
-  div.mini-card.favorites-view .fa-heart.mini.shrunk {
-    position: absolute;
-    left: 96%;
-    bottom: 1%;
-  }
-
-  i.fa-heart.mini.shrunk {
-    position: absolute;
-    left: 95%;
-    bottom: 1%;
   }
 
   div.col.card.card-full-screen, div.mini-card-full-screen {
