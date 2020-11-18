@@ -18,6 +18,7 @@ Try the application live at [https://nickkniola.github.io/crypto/](https://nickk
 - User can remove a favorited cryptocurrency
 
 ## Preview
+![Crypto](assets/preview.gif)
 
 ## Development
 
