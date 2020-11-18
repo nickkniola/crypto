@@ -12,3 +12,7 @@ window.addEventListener('beforeunload', function () {
   var favoritesJSON = JSON.stringify(favorites);
   localStorage.setItem('favoritesData', favoritesJSON);
 });
+
+window.addEventListener('load', function () {
+  getPrice('bitcoin');
+});

@@ -127,7 +127,7 @@ function getName(cryptocurrency, date) {
     heartIcon = document.querySelector('i.fa-heart.main');
     cryptoCardText = document.querySelector('.crypto-card-text');
     horizontalRules = document.querySelectorAll('hr');
-    prevPrices = document.querySelectorAll('.past-price');
+    // prevPrices = document.querySelectorAll('.past-price');
     mainCardEventListeners();
   });
 
@@ -254,9 +254,9 @@ function cardCreator() {
   fiveYearsElement.appendChild(spanFiveYears);
   cardTextDiv.appendChild(fiveYearsElement);
 
-  var heartIcon = document.createElement('i');
-  heartIcon.setAttribute('class', 'fas fa-heart main');
-  cardDiv.appendChild(heartIcon);
+  var heartIconElement = document.createElement('i');
+  heartIconElement.setAttribute('class', 'fas fa-heart main');
+  cardDiv.appendChild(heartIconElement);
 
   return cardDiv;
 }
@@ -345,9 +345,9 @@ function miniCardCreator(cryptoID) {
   fiveYearsElement.appendChild(spanFiveYears);
   cardTextDiv.appendChild(fiveYearsElement);
 
-  var heartIcon = document.createElement('i');
-  heartIcon.setAttribute('class', 'fas fa-heart mini shrunk');
-  miniCardDiv.appendChild(heartIcon);
+  var heartIconElement = document.createElement('i');
+  heartIconElement.setAttribute('class', 'fas fa-heart mini shrunk');
+  miniCardDiv.appendChild(heartIconElement);
 
   return miniCardDiv;
 }
@@ -384,9 +384,9 @@ function toggleNav() {
 }
 
 function toggleFullScreen() {
-  cardFullScreen = !cardFullScreen;
   miniCards = document.querySelectorAll('.mini-card');
-  if (cardFullScreen) {
+  prevPrices = document.querySelectorAll('.past-price');
+  if (!cardFullScreen) {
     if (favorite) {
       heartIcon.setAttribute('class', 'fas fa-heart main heart-full-screen favorited');
     } else {
@@ -398,6 +398,7 @@ function toggleFullScreen() {
     horizontalRules[1].setAttribute('class', '');
     prevPrices.forEach(el => el.setAttribute('class', 'past-price'));
     miniCards.forEach(el => el.setAttribute('class', 'mini-card hidden'));
+    cardFullScreen = true;
   } else {
     if (favorite) {
       heartIcon.setAttribute('class', 'fas fa-heart main favorited');
@@ -410,6 +411,7 @@ function toggleFullScreen() {
     horizontalRules[1].setAttribute('class', 'hidden');
     prevPrices.forEach(el => el.setAttribute('class', 'past-price hidden'));
     miniCards.forEach(el => el.setAttribute('class', 'mini-card'));
+    cardFullScreen = false;
   }
 }
 
@@ -445,7 +447,7 @@ function toggleMiniFullScreen(event) {
     }
   }
   if (event.target.className.includes('fas fa-heart mini')) {
-    delete favorites[event.target.previousSibling.children[1].textContent.split(' (')[0].toLowerCase()];
+    delete favorites[event.target.previousSibling.children[1].textContent.split(' (')[0].toLowerCase().replaceAll(' ', '-')];
     event.target.closest('.mini-card').remove();
   }
 }
