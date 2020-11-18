@@ -21,6 +21,10 @@ body {
   color: black;
 }
 
+.nav-item:hover {
+  color: #1a69d9;
+}
+
 .nav-item:link {
   text-decoration: none;
 }
@@ -81,7 +85,7 @@ button.search:hover {
 }
 
 .col-card {
-  height: 12rem;
+  min-height: 12rem;
   width: 100%;
 }
 
@@ -124,7 +128,7 @@ i.fa-expand, i.fa-heart.main {
 
 i.fa-heart.main {
   position: relative;
-  left: 91%;
+  left: calc(100% - 30px);
 }
 
 .mini-card-row {
@@ -142,7 +146,7 @@ i.fa-heart.main {
 
 i.fa-heart.mini.shrunk {
   position: relative;
-  left: 88%;
+  left: calc(100% - 20px);
   color: #da1010;
 }
 
@@ -244,33 +248,28 @@ i.fa-heart.main.favorited {
   div.col-card {
     width: 50%;
   }
+
   div.mini-card-row {
     width: 55%;
     margin: auto;
     display: flex;
   }
+
   div.mini-card.favorites-view {
     width: 70%;
-    height: 10rem;
+
     margin-left: auto;
     margin-right: auto;
   }
+
   div.col.card.card-full-screen, div.mini-card-full-screen {
     height: 94.5vh;
   }
-  i.fa-heart.main {
-    position: relative;
-    left: calc(100% - 30px);
-  }
-  i.fa-heart.mini.shrunk{
-    position: relative;
-    left: calc(100% - 20px);
-  }
+
   i.fa-heart.mini.heart-full-screen {
     position: absolute;
     left: calc(100% - 30px);
   }
-
 }
 
 @media only screen and (min-width: 1024px) {
@@ -278,6 +277,7 @@ i.fa-heart.main.favorited {
     width: 30%;
     height: 15rem;
   }
+
    div.col-card .card {
     height: 100%;
   }
@@ -285,29 +285,42 @@ i.fa-heart.main.favorited {
   div.col-card .card .crypto-card-text {
     margin-top: 2rem;
   }
+
   div.mini-card-row {
-    width: 40%;
+    width: 50%;
     margin: auto;
     display: flex;
   }
+
   div.mini-card.favorites-view {
     width: 70%;
-    height: 12rem;
     margin-left: auto;
     margin-right: auto;
     position: relative;
   }
 
   div.mini-card {
-    height: 12rem;
     position: relative;
-
   }
 
   div.col.card.card-full-screen, div.mini-card-full-screen {
     height: 94.5vh;
   }
-  div.mini-card {
-    height: 9rem;
+
+  h3 {
+    font-size: 24px;
+  }
+
+  .mini-card-row h4 {
+    font-size: 18px;
+  }
+
+  p.price {
+    font-size: 16px;
+  }
+
+  i.fa-heart.main {
+    position: relative;
+    bottom: -10%;
   }
 }
