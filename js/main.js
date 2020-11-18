@@ -78,14 +78,6 @@ cardColumn = document.querySelector('div.col.col-card');
 
 function getName(cryptocurrency, date) {
   cryptocurrency = cryptocurrency.replaceAll(' ', '-').toLowerCase();
-  mainCard = document.querySelector('div.col.col-card div.card');
-  spinningWheel = document.querySelector('img.spinning-wheel');
-  if (mainCard === null) {
-    spinningWheel.setAttribute('class', 'spinning-wheel');
-  } else {
-    cardColumn.removeChild(mainCard);
-    spinningWheel.setAttribute('class', 'spinning-wheel');
-  }
   var xhr = new XMLHttpRequest();
   xhr.open('GET', 'https://api.coingecko.com/api/v3/coins/' + cryptocurrency + '/history?date=' + date);
   xhr.responseType = 'json';
@@ -120,6 +112,14 @@ form.addEventListener('submit', searchCrypto);
 
 function searchCrypto(event) {
   event.preventDefault();
+  mainCard = document.querySelector('div.col.col-card div.card');
+  spinningWheel = document.querySelector('img.spinning-wheel');
+  if (mainCard === null) {
+    spinningWheel.setAttribute('class', 'spinning-wheel');
+  } else {
+    cardColumn.removeChild(mainCard);
+    spinningWheel.setAttribute('class', 'spinning-wheel');
+  }
   favorite = false;
   var searchedCrypto = event.target.elements.cryptoName.value;
   getPrice(searchedCrypto);
