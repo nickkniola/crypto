@@ -487,7 +487,9 @@ function toggleMiniFullScreen(event) {
   }
   if (event.target.className.includes('fas fa-heart mini')) {
     delete favorites[event.target.previousSibling.children[1].textContent.split(' (')[0].toLowerCase().replaceAll(' ', '-')];
-    event.target.closest('.mini-card').remove();
+    if (event.target.closest('.mini-card')) {
+      event.target.closest('.mini-card').remove();
+    }
   }
 }
 
