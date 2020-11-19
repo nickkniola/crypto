@@ -420,12 +420,14 @@ function toggleNav() {
 function toggleFullScreen() {
   miniCards = document.querySelectorAll('.mini-card');
   prevPrices = document.querySelectorAll('.past-price');
+  expandIcon = document.querySelector('i.fa-expand');
   if (!cardFullScreen) {
     if (favorite) {
       heartIcon.setAttribute('class', 'fas fa-heart main heart-full-screen favorited');
     } else {
       heartIcon.setAttribute('class', 'fas fa-heart main heart-full-screen');
     }
+    expandIcon.setAttribute('class', 'fas fa-expand expand-full-screen');
     mainCard.setAttribute('class', 'col card card-full-screen');
     cryptoCardText.setAttribute('class', 'crypto-card-text text-full-screen');
     horizontalRules[0].setAttribute('class', '');
@@ -439,6 +441,7 @@ function toggleFullScreen() {
     } else {
       heartIcon.setAttribute('class', 'fas fa-heart main');
     }
+    expandIcon.setAttribute('class', 'fas fa-expand');
     mainCard.setAttribute('class', 'col card');
     cryptoCardText.setAttribute('class', 'crypto-card-text');
     horizontalRules[0].setAttribute('class', 'hidden');
@@ -458,6 +461,7 @@ function toggleMiniFullScreen(event) {
       event.target.closest('.mini-card').setAttribute('class', 'mini-card-full-screen');
       prevPrices = document.querySelectorAll('.mini-card-full-screen .past-price');
       prevPrices.forEach(el => el.setAttribute('class', 'past-price'));
+      miniExpandIcons.forEach(el => el.setAttribute('class', 'fas fa-expand mini expand-full-screen'));
       event.target.nextElementSibling.nextElementSibling.setAttribute('class', 'fas fa-heart mini heart-full-screen');
       event.target.nextElementSibling.children[0].setAttribute('class', '');
       event.target.nextElementSibling.children[2].setAttribute('class', '');
@@ -474,6 +478,7 @@ function toggleMiniFullScreen(event) {
       }
       prevPrices = document.querySelectorAll('.mini-card .past-price');
       prevPrices.forEach(el => el.setAttribute('class', 'past-price hidden'));
+      miniExpandIcons.forEach(el => el.setAttribute('class', 'fas fa-expand mini'));
       event.target.nextElementSibling.nextElementSibling.setAttribute('class', 'fas fa-heart mini shrunk');
       event.target.nextElementSibling.children[0].setAttribute('class', 'hidden');
       event.target.nextElementSibling.children[2].setAttribute('class', 'hidden');

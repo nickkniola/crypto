@@ -330,6 +330,9 @@ i.fa-heart.main.favorited {
 
   div.col.card.card-full-screen, div.mini-card-full-screen {
     height: calc(100vh - 55px);
+    max-width: 70rem;
+    margin: auto;
+    border: 1px black solid;
   }
 
   h3 {
@@ -342,7 +345,6 @@ i.fa-heart.main.favorited {
 
   .mini-card-full-screen h4 {
   font-size: 24px;
-
   }
 
   p.price {
@@ -351,5 +353,19 @@ i.fa-heart.main.favorited {
 
   i.fa-heart.main {
     bottom: -6%;
+  }
+
+  i.fa-heart.heart-full-screen, i.fa-heart.mini.heart-full-screen {
+    font-size: 35px;
+    left: calc(100% - 55px);
+    top: calc(100% - 55px);
+  }
+
+  i.fa-expand {
+    font-size: 25px;
+  }
+
+  i.fa-expand.expand-full-screen {
+    font-size: 35px;
   }
 }
