@@ -39,6 +39,7 @@ Object.keys(favorites).forEach(key => {
     } else {
       favorites[key].price = fullPrice;
     }
+    favorite = false;
     findPastPrice(key, dateGenerator(7), 'oneWeek');
     findPastPrice(key, dateGenerator(30.41), 'oneMonth');
     findPastPrice(key, dateGenerator(91.25), 'threeMonths');
@@ -192,6 +193,10 @@ function findPastPrice(cryptocurrency, date, daysAgo) {
         getName(cryptocurrency, dateGenerator(0));
       }
     }
+  });
+
+  xhr.addEventListener('error', function () {
+    cardColumn.appendChild(networkErrorTextCreator());
   });
 
   xhr.send();
