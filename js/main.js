@@ -3,6 +3,7 @@ var cardFullScreen = false;
 var miniCardFullScreen = false;
 var favorite = false;
 var favoritesView = false;
+var appendCard = false;
 var navToggler = document.querySelector('i.fa-bars');
 var navBar = document.querySelector('header.nav-bar');
 var navContent = document.querySelectorAll('.nav-row.item');
@@ -22,9 +23,35 @@ var expandIcon = null;
 var miniExpandIcons = null;
 var heartIcon = null;
 var errorText = null;
+var h3ErrorElement = null;
 var prevDateIncrementer = 0;
 
-Object.keys(favorites).forEach(key => miniCardRow.appendChild(miniCardCreator(key)));
+Object.keys(favorites).forEach(key => {
+  var xhr = new XMLHttpRequest();
+  xhr.open('GET', 'https://api.coingecko.com/api/v3/simple/price?ids=' + key + '&vs_currencies=usd');
+  xhr.responseType = 'json';
+
+  xhr.addEventListener('load', function () {
+    var fullPrice = xhr.response[key].usd.toFixed(2).toString();
+    if (fullPrice.length >= 8) {
+      var firstHalf = fullPrice.slice(0, 2);
+      var secondHalf = fullPrice.slice(2);
+      favorites[key].price = firstHalf + ',' + secondHalf;
+    } else {
+      favorites[key].price = fullPrice;
+    }
+    favorite = false;
+    findPastPrice(key, dateGenerator(7), 'oneWeek');
+    findPastPrice(key, dateGenerator(30.41), 'oneMonth');
+    findPastPrice(key, dateGenerator(91.25), 'threeMonths');
+    findPastPrice(key, dateGenerator(182.5), 'sixMonths');
+    findPastPrice(key, dateGenerator(365), 'oneYear');
+    findPastPrice(key, dateGenerator(1825), 'fiveYears');
+
+    miniCardRow.appendChild(miniCardCreator(key));
+  });
+  xhr.send();
+});
 
 navToggler.addEventListener('click', toggleNav);
 navLinks.addEventListener('click', viewSwapper);
@@ -55,14 +82,15 @@ function searchCrypto(event) {
 }
 
 function getPrice(cryptocurrency) {
+  h3ErrorElement = document.querySelector('h3.not-found');
   cardColumn = document.querySelector('div.col.col-card');
   mainCard = document.querySelector('div.col.col-card div.card');
   cryptocurrency = cryptocurrency.replaceAll(' ', '-').toLowerCase();
   var xhr = new XMLHttpRequest();
   xhr.open('GET', 'https://api.coingecko.com/api/v3/simple/price?ids=' + cryptocurrency + '&vs_currencies=usd');
   xhr.responseType = 'json';
-  if (errorText) {
-    cardColumn.removeChild(errorText);
+  if (h3ErrorElement) {
+    cardColumn.removeChild(h3ErrorElement);
   }
 
   xhr.addEventListener('load', function () {
@@ -83,6 +111,7 @@ function getPrice(cryptocurrency) {
     } else {
       crypto.price = fullPrice;
     }
+    appendCard = true;
     findPastPrice(cryptocurrency, dateGenerator(7), 'oneWeek');
     findPastPrice(cryptocurrency, dateGenerator(30.41), 'oneMonth');
     findPastPrice(cryptocurrency, dateGenerator(91.25), 'threeMonths');
@@ -127,7 +156,6 @@ function getName(cryptocurrency, date) {
     heartIcon = document.querySelector('i.fa-heart.main');
     cryptoCardText = document.querySelector('.crypto-card-text');
     horizontalRules = document.querySelectorAll('hr');
-    prevPrices = document.querySelectorAll('.past-price');
     mainCardEventListeners();
   });
 
@@ -163,8 +191,14 @@ function findPastPrice(cryptocurrency, date, daysAgo) {
       prevDateIncrementer++;
     } else if (prevDateIncrementer === 5) {
       prevDateIncrementer = 0;
-      getName(cryptocurrency, dateGenerator(0));
+      if (appendCard) {
+        getName(cryptocurrency, dateGenerator(0));
+      }
     }
+  });
+
+  xhr.addEventListener('error', function () {
+    cardColumn.appendChild(networkErrorTextCreator());
   });
 
   xhr.send();
@@ -254,9 +288,9 @@ function cardCreator() {
   fiveYearsElement.appendChild(spanFiveYears);
   cardTextDiv.appendChild(fiveYearsElement);
 
-  var heartIcon = document.createElement('i');
-  heartIcon.setAttribute('class', 'fas fa-heart main');
-  cardDiv.appendChild(heartIcon);
+  var heartIconElement = document.createElement('i');
+  heartIconElement.setAttribute('class', 'fas fa-heart main');
+  cardDiv.appendChild(heartIconElement);
 
   return cardDiv;
 }
@@ -345,9 +379,9 @@ function miniCardCreator(cryptoID) {
   fiveYearsElement.appendChild(spanFiveYears);
   cardTextDiv.appendChild(fiveYearsElement);
 
-  var heartIcon = document.createElement('i');
-  heartIcon.setAttribute('class', 'fas fa-heart mini shrunk');
-  miniCardDiv.appendChild(heartIcon);
+  var heartIconElement = document.createElement('i');
+  heartIconElement.setAttribute('class', 'fas fa-heart mini shrunk');
+  miniCardDiv.appendChild(heartIconElement);
 
   return miniCardDiv;
 }
@@ -384,32 +418,37 @@ function toggleNav() {
 }
 
 function toggleFullScreen() {
-  cardFullScreen = !cardFullScreen;
   miniCards = document.querySelectorAll('.mini-card');
-  if (cardFullScreen) {
+  prevPrices = document.querySelectorAll('.past-price');
+  expandIcon = document.querySelector('i.fa-expand');
+  if (!cardFullScreen) {
     if (favorite) {
       heartIcon.setAttribute('class', 'fas fa-heart main heart-full-screen favorited');
     } else {
       heartIcon.setAttribute('class', 'fas fa-heart main heart-full-screen');
     }
+    expandIcon.setAttribute('class', 'fas fa-expand expand-full-screen');
     mainCard.setAttribute('class', 'col card card-full-screen');
     cryptoCardText.setAttribute('class', 'crypto-card-text text-full-screen');
     horizontalRules[0].setAttribute('class', '');
     horizontalRules[1].setAttribute('class', '');
     prevPrices.forEach(el => el.setAttribute('class', 'past-price'));
     miniCards.forEach(el => el.setAttribute('class', 'mini-card hidden'));
+    cardFullScreen = true;
   } else {
     if (favorite) {
       heartIcon.setAttribute('class', 'fas fa-heart main favorited');
     } else {
       heartIcon.setAttribute('class', 'fas fa-heart main');
     }
+    expandIcon.setAttribute('class', 'fas fa-expand');
     mainCard.setAttribute('class', 'col card');
     cryptoCardText.setAttribute('class', 'crypto-card-text');
     horizontalRules[0].setAttribute('class', 'hidden');
     horizontalRules[1].setAttribute('class', 'hidden');
     prevPrices.forEach(el => el.setAttribute('class', 'past-price hidden'));
     miniCards.forEach(el => el.setAttribute('class', 'mini-card'));
+    cardFullScreen = false;
   }
 }
 
@@ -422,6 +461,7 @@ function toggleMiniFullScreen(event) {
       event.target.closest('.mini-card').setAttribute('class', 'mini-card-full-screen');
       prevPrices = document.querySelectorAll('.mini-card-full-screen .past-price');
       prevPrices.forEach(el => el.setAttribute('class', 'past-price'));
+      miniExpandIcons.forEach(el => el.setAttribute('class', 'fas fa-expand mini expand-full-screen'));
       event.target.nextElementSibling.nextElementSibling.setAttribute('class', 'fas fa-heart mini heart-full-screen');
       event.target.nextElementSibling.children[0].setAttribute('class', '');
       event.target.nextElementSibling.children[2].setAttribute('class', '');
@@ -438,6 +478,7 @@ function toggleMiniFullScreen(event) {
       }
       prevPrices = document.querySelectorAll('.mini-card .past-price');
       prevPrices.forEach(el => el.setAttribute('class', 'past-price hidden'));
+      miniExpandIcons.forEach(el => el.setAttribute('class', 'fas fa-expand mini'));
       event.target.nextElementSibling.nextElementSibling.setAttribute('class', 'fas fa-heart mini shrunk');
       event.target.nextElementSibling.children[0].setAttribute('class', 'hidden');
       event.target.nextElementSibling.children[2].setAttribute('class', 'hidden');
@@ -445,8 +486,10 @@ function toggleMiniFullScreen(event) {
     }
   }
   if (event.target.className.includes('fas fa-heart mini')) {
-    delete favorites[event.target.previousSibling.children[1].textContent.split(' (')[0].toLowerCase()];
-    event.target.closest('.mini-card').remove();
+    delete favorites[event.target.previousSibling.children[1].textContent.split(' (')[0].toLowerCase().replaceAll(' ', '-')];
+    if (event.target.closest('.mini-card')) {
+      event.target.closest('.mini-card').remove();
+    }
   }
 }
 
