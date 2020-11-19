@@ -23,6 +23,7 @@ var expandIcon = null;
 var miniExpandIcons = null;
 var heartIcon = null;
 var errorText = null;
+var h3ErrorElement = null;
 var prevDateIncrementer = 0;
 
 Object.keys(favorites).forEach(key => {
@@ -81,14 +82,15 @@ function searchCrypto(event) {
 }
 
 function getPrice(cryptocurrency) {
+  h3ErrorElement = document.querySelector('h3.not-found');
   cardColumn = document.querySelector('div.col.col-card');
   mainCard = document.querySelector('div.col.col-card div.card');
   cryptocurrency = cryptocurrency.replaceAll(' ', '-').toLowerCase();
   var xhr = new XMLHttpRequest();
   xhr.open('GET', 'https://api.coingecko.com/api/v3/simple/price?ids=' + cryptocurrency + '&vs_currencies=usd');
   xhr.responseType = 'json';
-  if (errorText) {
-    cardColumn.removeChild(errorText);
+  if (h3ErrorElement) {
+    cardColumn.removeChild(h3ErrorElement);
   }
 
   xhr.addEventListener('load', function () {
