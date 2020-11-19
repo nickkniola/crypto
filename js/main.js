@@ -3,6 +3,7 @@ var cardFullScreen = false;
 var miniCardFullScreen = false;
 var favorite = false;
 var favoritesView = false;
+var appendCard = false;
 var navToggler = document.querySelector('i.fa-bars');
 var navBar = document.querySelector('header.nav-bar');
 var navContent = document.querySelectorAll('.nav-row.item');
@@ -24,7 +25,31 @@ var heartIcon = null;
 var errorText = null;
 var prevDateIncrementer = 0;
 
-Object.keys(favorites).forEach(key => miniCardRow.appendChild(miniCardCreator(key)));
+Object.keys(favorites).forEach(key => {
+  var xhr = new XMLHttpRequest();
+  xhr.open('GET', 'https://api.coingecko.com/api/v3/simple/price?ids=' + key + '&vs_currencies=usd');
+  xhr.responseType = 'json';
+
+  xhr.addEventListener('load', function () {
+    var fullPrice = xhr.response[key].usd.toFixed(2).toString();
+    if (fullPrice.length >= 8) {
+      var firstHalf = fullPrice.slice(0, 2);
+      var secondHalf = fullPrice.slice(2);
+      favorites[key].price = firstHalf + ',' + secondHalf;
+    } else {
+      favorites[key].price = fullPrice;
+    }
+    findPastPrice(key, dateGenerator(7), 'oneWeek');
+    findPastPrice(key, dateGenerator(30.41), 'oneMonth');
+    findPastPrice(key, dateGenerator(91.25), 'threeMonths');
+    findPastPrice(key, dateGenerator(182.5), 'sixMonths');
+    findPastPrice(key, dateGenerator(365), 'oneYear');
+    findPastPrice(key, dateGenerator(1825), 'fiveYears');
+
+    miniCardRow.appendChild(miniCardCreator(key));
+  });
+  xhr.send();
+});
 
 navToggler.addEventListener('click', toggleNav);
 navLinks.addEventListener('click', viewSwapper);
@@ -83,6 +108,7 @@ function getPrice(cryptocurrency) {
     } else {
       crypto.price = fullPrice;
     }
+    appendCard = true;
     findPastPrice(cryptocurrency, dateGenerator(7), 'oneWeek');
     findPastPrice(cryptocurrency, dateGenerator(30.41), 'oneMonth');
     findPastPrice(cryptocurrency, dateGenerator(91.25), 'threeMonths');
@@ -127,7 +153,6 @@ function getName(cryptocurrency, date) {
     heartIcon = document.querySelector('i.fa-heart.main');
     cryptoCardText = document.querySelector('.crypto-card-text');
     horizontalRules = document.querySelectorAll('hr');
-    // prevPrices = document.querySelectorAll('.past-price');
     mainCardEventListeners();
   });
 
@@ -163,7 +188,9 @@ function findPastPrice(cryptocurrency, date, daysAgo) {
       prevDateIncrementer++;
     } else if (prevDateIncrementer === 5) {
       prevDateIncrementer = 0;
-      getName(cryptocurrency, dateGenerator(0));
+      if (appendCard) {
+        getName(cryptocurrency, dateGenerator(0));
+      }
     }
   });
 
