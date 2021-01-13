@@ -28,7 +28,7 @@ Try the application live at [https://nickkniola.github.io/crypto/](https://nickk
 
     ```shell
     git clone https://github.com/nickkniola/crypto.git
-    cd ajax-project
+    cd crypto
     ```
 
 2. Open index.html in the browser
