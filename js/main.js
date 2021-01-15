@@ -514,6 +514,8 @@ function toggleFavorite() {
         }
       };
       miniCardRow.appendChild(miniCardCreator(crypto.id));
+      const noFavorites = document.querySelector('.no-favorites');
+      miniCardRow.removeChild(noFavorites);
     }
   } else {
     if (heartIcon.className.includes('heart-full-screen')) {
@@ -529,6 +531,7 @@ function toggleFavorite() {
         delete favorites[crypto.id];
       }
     }
+    miniCardRow.appendChild(noFavoritesTextCreator());
   }
 }
 
@@ -559,4 +562,16 @@ function networkErrorTextCreator() {
   errorText.textContent = 'Network Error. Please Try Again.';
 
   return errorText;
+}
+
+function noFavoritesTextCreator() {
+  const h4Element = document.createElement('h4');
+  h4Element.setAttribute('class', 'no-favorites');
+  h4Element.textContent = 'No Favorites';
+
+  return h4Element;
+}
+
+if (Object.keys(favorites).length === 0) {
+  miniCardRow.appendChild(noFavoritesTextCreator());
 }
