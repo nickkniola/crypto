@@ -1,41 +1,41 @@
-var navOpen = false;
-var cardFullScreen = false;
-var miniCardFullScreen = false;
-var favorite = false;
-var favoritesView = false;
-var appendCard = false;
-var navToggler = document.querySelector('i.fa-bars');
-var navBar = document.querySelector('header.nav-bar');
-var navContent = document.querySelectorAll('.nav-row.item');
-var navLinks = document.querySelector('div.nav-links');
-var form = document.querySelector('form');
-var miniCardRow = document.querySelector('div.mini-card-row');
-var mainCard = null;
-var cardColumn = null;
-var cryptoCardText = null;
-var horizontalRules = null;
-var spinningWheel = null;
-var fullPrice = null;
-var prevPrices = null;
-var miniCards = null;
-var miniCardsH4 = null;
-var expandIcon = null;
-var miniExpandIcons = null;
-var heartIcon = null;
-var errorText = null;
-var h3ErrorElement = null;
-var prevDateIncrementer = 0;
+let navOpen = false;
+let cardFullScreen = false;
+let miniCardFullScreen = false;
+let favorite = false;
+let favoritesView = false;
+let appendCard = false;
+const navToggler = document.querySelector('i.fa-bars');
+const navBar = document.querySelector('header.nav-bar');
+const navContent = document.querySelectorAll('.nav-row.item');
+const navLinks = document.querySelector('div.nav-links');
+const form = document.querySelector('form');
+const miniCardRow = document.querySelector('div.mini-card-row');
+let mainCard = null;
+let cardColumn = null;
+let cryptoCardText = null;
+let horizontalRules = null;
+let spinningWheel = null;
+let fullPrice = null;
+let prevPrices = null;
+let miniCards = null;
+let miniCardsH4 = null;
+let expandIcon = null;
+let miniExpandIcons = null;
+let heartIcon = null;
+let errorText = null;
+let h3ErrorElement = null;
+let prevDateIncrementer = 0;
 
 Object.keys(favorites).forEach(key => {
-  var xhr = new XMLHttpRequest();
+  const xhr = new XMLHttpRequest();
   xhr.open('GET', 'https://api.coingecko.com/api/v3/simple/price?ids=' + key + '&vs_currencies=usd');
   xhr.responseType = 'json';
 
   xhr.addEventListener('load', function () {
-    var fullPrice = xhr.response[key].usd.toFixed(2).toString();
+    const fullPrice = xhr.response[key].usd.toFixed(2).toString();
     if (fullPrice.length >= 8) {
-      var firstHalf = fullPrice.slice(0, 2);
-      var secondHalf = fullPrice.slice(2);
+      const firstHalf = fullPrice.slice(0, 2);
+      const secondHalf = fullPrice.slice(2);
       favorites[key].price = firstHalf + ',' + secondHalf;
     } else {
       favorites[key].price = fullPrice;
@@ -76,7 +76,7 @@ function searchCrypto(event) {
     spinningWheel.setAttribute('class', 'spinning-wheel');
   }
   favorite = false;
-  var searchedCrypto = event.target.elements.cryptoName.value;
+  const searchedCrypto = event.target.elements.cryptoName.value;
   getPrice(searchedCrypto);
   form.reset();
 }
@@ -86,7 +86,7 @@ function getPrice(cryptocurrency) {
   cardColumn = document.querySelector('div.col.col-card');
   mainCard = document.querySelector('div.col.col-card div.card');
   cryptocurrency = cryptocurrency.replaceAll(' ', '-').toLowerCase();
-  var xhr = new XMLHttpRequest();
+  const xhr = new XMLHttpRequest();
   xhr.open('GET', 'https://api.coingecko.com/api/v3/simple/price?ids=' + cryptocurrency + '&vs_currencies=usd');
   xhr.responseType = 'json';
   if (h3ErrorElement) {
@@ -105,8 +105,8 @@ function getPrice(cryptocurrency) {
     }
     fullPrice = xhr.response[cryptocurrency].usd.toFixed(2).toString();
     if (fullPrice.length >= 8) {
-      var firstHalf = fullPrice.slice(0, 2);
-      var secondHalf = fullPrice.slice(2);
+      const firstHalf = fullPrice.slice(0, 2);
+      const secondHalf = fullPrice.slice(2);
       crypto.price = firstHalf + ',' + secondHalf;
     } else {
       crypto.price = fullPrice;
@@ -133,7 +133,7 @@ function getName(cryptocurrency, date) {
   mainCard = document.querySelector('div.col.col-card div.card');
   spinningWheel = document.querySelector('img.spinning-wheel');
   cardColumn = document.querySelector('div.col.col-card');
-  var xhr = new XMLHttpRequest();
+  const xhr = new XMLHttpRequest();
   xhr.open('GET', 'https://api.coingecko.com/api/v3/coins/' + cryptocurrency + '/history?date=' + date);
   xhr.responseType = 'json';
 
@@ -167,7 +167,7 @@ function getName(cryptocurrency, date) {
 }
 
 function findPastPrice(cryptocurrency, date, daysAgo) {
-  var xhr = new XMLHttpRequest();
+  const xhr = new XMLHttpRequest();
   xhr.open('GET', 'https://api.coingecko.com/api/v3/coins/' + cryptocurrency + '/history?date=' + date);
   xhr.responseType = 'json';
 
@@ -178,8 +178,8 @@ function findPastPrice(cryptocurrency, date, daysAgo) {
       fullPrice = xhr.response.market_data.current_price.usd.toFixed(2).toString();
     }
     if (fullPrice.length === 7) {
-      var firstHalf = fullPrice.slice(0, 1);
-      var secondHalf = fullPrice.slice(1);
+      const firstHalf = fullPrice.slice(0, 1);
+      const secondHalf = fullPrice.slice(1);
       fullPrice = firstHalf + ',' + secondHalf;
     } else if (fullPrice.length === 8) {
       firstHalf = fullPrice.slice(0, 2);
@@ -205,90 +205,90 @@ function findPastPrice(cryptocurrency, date, daysAgo) {
 }
 
 function cardCreator() {
-  var cardDiv = document.createElement('div');
+  const cardDiv = document.createElement('div');
   cardDiv.setAttribute('class', 'card');
 
-  var expandIcon = document.createElement('i');
+  const expandIcon = document.createElement('i');
   expandIcon.setAttribute('class', 'fas fa-expand');
   cardDiv.appendChild(expandIcon);
 
-  var cardTextDiv = document.createElement('div');
+  const cardTextDiv = document.createElement('div');
   cardTextDiv.setAttribute('class', 'crypto-card-text');
   cardDiv.appendChild(cardTextDiv);
 
-  var horizontalRule1 = document.createElement('hr');
+  const horizontalRule1 = document.createElement('hr');
   horizontalRule1.setAttribute('class', 'hidden');
   cardTextDiv.appendChild(horizontalRule1);
 
-  var h3Element = document.createElement('h3');
+  const h3Element = document.createElement('h3');
   h3Element.textContent = crypto.name;
-  var span = document.createElement('span');
+  const span = document.createElement('span');
   span.setAttribute('class', 'symbol');
   span.textContent = ' (' + crypto.symbol + ' - USD)';
   h3Element.appendChild(span);
   cardTextDiv.appendChild(h3Element);
 
-  var horizontalRule2 = document.createElement('hr');
+  const horizontalRule2 = document.createElement('hr');
   horizontalRule2.setAttribute('class', 'hidden');
   cardTextDiv.appendChild(horizontalRule2);
 
-  var pElement = document.createElement('p');
+  const pElement = document.createElement('p');
   pElement.setAttribute('class', 'price');
   pElement.textContent = 'Current Price: ';
-  var spanElement = document.createElement('span');
+  const spanElement = document.createElement('span');
   spanElement.textContent = '$' + crypto.price;
   pElement.appendChild(spanElement);
   cardTextDiv.appendChild(pElement);
 
-  var prevWeekElement = document.createElement('p');
+  const prevWeekElement = document.createElement('p');
   prevWeekElement.setAttribute('class', 'past-price hidden');
   prevWeekElement.textContent = 'Prev. Week: ';
-  var spanPrevWeek = document.createElement('span');
+  const spanPrevWeek = document.createElement('span');
   spanPrevWeek.textContent = '$' + crypto.pastPrices.oneWeek;
   prevWeekElement.appendChild(spanPrevWeek);
   cardTextDiv.appendChild(prevWeekElement);
 
-  var prevMonthElement = document.createElement('p');
+  const prevMonthElement = document.createElement('p');
   prevMonthElement.setAttribute('class', 'past-price hidden');
   prevMonthElement.textContent = 'Prev. Month: ';
-  var spanPrevMonth = document.createElement('span');
+  const spanPrevMonth = document.createElement('span');
   spanPrevMonth.textContent = '$' + crypto.pastPrices.oneMonth;
   prevMonthElement.appendChild(spanPrevMonth);
   cardTextDiv.appendChild(prevMonthElement);
 
-  var threeMonthsElement = document.createElement('p');
+  const threeMonthsElement = document.createElement('p');
   threeMonthsElement.setAttribute('class', 'past-price hidden');
   threeMonthsElement.textContent = '3 Months Ago: ';
-  var spanThreeMonths = document.createElement('span');
+  const spanThreeMonths = document.createElement('span');
   spanThreeMonths.textContent = '$' + crypto.pastPrices.threeMonths;
   threeMonthsElement.appendChild(spanThreeMonths);
   cardTextDiv.appendChild(threeMonthsElement);
 
-  var sixMonthsElement = document.createElement('p');
+  const sixMonthsElement = document.createElement('p');
   sixMonthsElement.setAttribute('class', 'past-price hidden');
   sixMonthsElement.textContent = '6 Months Ago: ';
-  var spanSixMonths = document.createElement('span');
+  const spanSixMonths = document.createElement('span');
   spanSixMonths.textContent = '$' + crypto.pastPrices.sixMonths;
   sixMonthsElement.appendChild(spanSixMonths);
   cardTextDiv.appendChild(sixMonthsElement);
 
-  var oneYearElement = document.createElement('p');
+  const oneYearElement = document.createElement('p');
   oneYearElement.setAttribute('class', 'past-price hidden');
   oneYearElement.textContent = '1 Year Ago: ';
-  var spanOneYear = document.createElement('span');
+  const spanOneYear = document.createElement('span');
   spanOneYear.textContent = '$' + crypto.pastPrices.oneYear;
   oneYearElement.appendChild(spanOneYear);
   cardTextDiv.appendChild(oneYearElement);
 
-  var fiveYearsElement = document.createElement('p');
+  const fiveYearsElement = document.createElement('p');
   fiveYearsElement.setAttribute('class', 'past-price hidden');
   fiveYearsElement.textContent = '5 Years Ago: ';
-  var spanFiveYears = document.createElement('span');
+  const spanFiveYears = document.createElement('span');
   spanFiveYears.textContent = '$' + crypto.pastPrices.fiveYears;
   fiveYearsElement.appendChild(spanFiveYears);
   cardTextDiv.appendChild(fiveYearsElement);
 
-  var heartIconElement = document.createElement('i');
+  const heartIconElement = document.createElement('i');
   heartIconElement.setAttribute('class', 'fas fa-heart main');
   cardDiv.appendChild(heartIconElement);
 
@@ -296,90 +296,90 @@ function cardCreator() {
 }
 
 function miniCardCreator(cryptoID) {
-  var miniCardDiv = document.createElement('div');
+  const miniCardDiv = document.createElement('div');
   miniCardDiv.setAttribute('class', 'mini-card');
 
-  var expandIcon = document.createElement('i');
+  const expandIcon = document.createElement('i');
   expandIcon.setAttribute('class', 'fas fa-expand mini');
   miniCardDiv.appendChild(expandIcon);
 
-  var cardTextDiv = document.createElement('div');
+  const cardTextDiv = document.createElement('div');
   cardTextDiv.setAttribute('class', 'mini-crypto-card-text');
   miniCardDiv.appendChild(cardTextDiv);
 
-  var horizontalRule1 = document.createElement('hr');
+  const horizontalRule1 = document.createElement('hr');
   horizontalRule1.setAttribute('class', 'hidden');
   cardTextDiv.appendChild(horizontalRule1);
 
-  var h4Element = document.createElement('h4');
+  const h4Element = document.createElement('h4');
   h4Element.textContent = favorites[cryptoID].name;
-  var span = document.createElement('span');
+  const span = document.createElement('span');
   span.setAttribute('class', 'symbol');
   span.textContent = ' (' + favorites[cryptoID].symbol + ' - USD)';
   h4Element.appendChild(span);
   cardTextDiv.appendChild(h4Element);
 
-  var horizontalRule2 = document.createElement('hr');
+  const horizontalRule2 = document.createElement('hr');
   horizontalRule2.setAttribute('class', 'hidden');
   cardTextDiv.appendChild(horizontalRule2);
 
-  var pElement = document.createElement('p');
+  const pElement = document.createElement('p');
   pElement.setAttribute('class', 'price');
   pElement.textContent = 'Current Price: ';
-  var spanElement = document.createElement('span');
+  const spanElement = document.createElement('span');
   spanElement.textContent = '$' + favorites[cryptoID].price;
   pElement.appendChild(spanElement);
   cardTextDiv.appendChild(pElement);
 
-  var prevWeekElement = document.createElement('p');
+  const prevWeekElement = document.createElement('p');
   prevWeekElement.setAttribute('class', 'past-price hidden');
   prevWeekElement.textContent = 'Prev. Week: ';
-  var spanPrevWeek = document.createElement('span');
+  const spanPrevWeek = document.createElement('span');
   spanPrevWeek.textContent = '$' + favorites[cryptoID].pastPrices.oneWeek;
   prevWeekElement.appendChild(spanPrevWeek);
   cardTextDiv.appendChild(prevWeekElement);
 
-  var prevMonthElement = document.createElement('p');
+  const prevMonthElement = document.createElement('p');
   prevMonthElement.setAttribute('class', 'past-price hidden');
   prevMonthElement.textContent = 'Prev. Month: ';
-  var spanPrevMonth = document.createElement('span');
+  const spanPrevMonth = document.createElement('span');
   spanPrevMonth.textContent = '$' + favorites[cryptoID].pastPrices.oneMonth;
   prevMonthElement.appendChild(spanPrevMonth);
   cardTextDiv.appendChild(prevMonthElement);
 
-  var threeMonthsElement = document.createElement('p');
+  const threeMonthsElement = document.createElement('p');
   threeMonthsElement.setAttribute('class', 'past-price hidden');
   threeMonthsElement.textContent = '3 Months Ago: ';
-  var spanThreeMonths = document.createElement('span');
+  const spanThreeMonths = document.createElement('span');
   spanThreeMonths.textContent = '$' + favorites[cryptoID].pastPrices.threeMonths;
   threeMonthsElement.appendChild(spanThreeMonths);
   cardTextDiv.appendChild(threeMonthsElement);
 
-  var sixMonthsElement = document.createElement('p');
+  const sixMonthsElement = document.createElement('p');
   sixMonthsElement.setAttribute('class', 'past-price hidden');
   sixMonthsElement.textContent = '6 Months Ago: ';
-  var spanSixMonths = document.createElement('span');
+  const spanSixMonths = document.createElement('span');
   spanSixMonths.textContent = '$' + favorites[cryptoID].pastPrices.sixMonths;
   sixMonthsElement.appendChild(spanSixMonths);
   cardTextDiv.appendChild(sixMonthsElement);
 
-  var oneYearElement = document.createElement('p');
+  const oneYearElement = document.createElement('p');
   oneYearElement.setAttribute('class', 'past-price hidden');
   oneYearElement.textContent = '1 Year Ago: ';
-  var spanOneYear = document.createElement('span');
+  const spanOneYear = document.createElement('span');
   spanOneYear.textContent = '$' + favorites[cryptoID].pastPrices.oneYear;
   oneYearElement.appendChild(spanOneYear);
   cardTextDiv.appendChild(oneYearElement);
 
-  var fiveYearsElement = document.createElement('p');
+  const fiveYearsElement = document.createElement('p');
   fiveYearsElement.setAttribute('class', 'past-price hidden');
   fiveYearsElement.textContent = '5 Years Ago: ';
-  var spanFiveYears = document.createElement('span');
+  const spanFiveYears = document.createElement('span');
   spanFiveYears.textContent = '$' + favorites[cryptoID].pastPrices.fiveYears;
   fiveYearsElement.appendChild(spanFiveYears);
   cardTextDiv.appendChild(fiveYearsElement);
 
-  var heartIconElement = document.createElement('i');
+  const heartIconElement = document.createElement('i');
   heartIconElement.setAttribute('class', 'fas fa-heart mini shrunk');
   miniCardDiv.appendChild(heartIconElement);
 
@@ -387,9 +387,9 @@ function miniCardCreator(cryptoID) {
 }
 
 function viewSwapper(event) {
-  var searchedItem = document.querySelector('.container.searched-item');
-  var homeLink = document.querySelector('.nav-item.home');
-  var favoritesLink = document.querySelector('.nav-item.favorites');
+  const searchedItem = document.querySelector('.container.searched-item');
+  const homeLink = document.querySelector('.nav-item.home');
+  const favoritesLink = document.querySelector('.nav-item.favorites');
   miniCards = document.querySelectorAll('.mini-card');
   if (event.target === favoritesLink) {
     favoritesView = true;
@@ -523,7 +523,7 @@ function toggleFavorite() {
     }
     miniCards = document.querySelectorAll('.mini-card');
     miniCardsH4 = document.querySelectorAll('.mini-crypto-card-text > h4');
-    for (var i = 0; i < miniCardsH4.length; i++) {
+    for (let i = 0; i < miniCardsH4.length; i++) {
       if (miniCardsH4[i].textContent.split(' (')[0] === crypto.name) {
         miniCards[i].remove();
         delete favorites[crypto.id];
@@ -533,14 +533,14 @@ function toggleFavorite() {
 }
 
 function dateGenerator(daysAgo) {
-  var millisecondsAgo = daysAgo * 86400000;
-  var currentMilliseconds = Date.now();
-  var resultMilliseconds = currentMilliseconds - millisecondsAgo;
-  var date = new Date(resultMilliseconds);
-  var day = date.getDate();
-  var month = date.getMonth() + 1;
-  var year = date.getFullYear();
-  var fullDate = day + '-' + month + '-' + year;
+  const millisecondsAgo = daysAgo * 86400000;
+  const currentMilliseconds = Date.now();
+  const resultMilliseconds = currentMilliseconds - millisecondsAgo;
+  const date = new Date(resultMilliseconds);
+  const day = date.getDate();
+  const month = date.getMonth() + 1;
+  const year = date.getFullYear();
+  const fullDate = day + '-' + month + '-' + year;
 
   return fullDate;
 }
