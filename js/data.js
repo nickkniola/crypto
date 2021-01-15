@@ -1,14 +1,14 @@
-var favorites = {};
+let favorites = {};
 
-var crypto = {};
+const crypto = {};
 crypto.pastPrices = {};
 
-var savedFavorites = localStorage.getItem('favoritesData');
+const savedFavorites = localStorage.getItem('favoritesData');
 if (savedFavorites !== null && savedFavorites !== 'undefined') {
   favorites = JSON.parse(savedFavorites);
 }
 
 window.addEventListener('beforeunload', function () {
-  var favoritesJSON = JSON.stringify(favorites);
+  const favoritesJSON = JSON.stringify(favorites);
   localStorage.setItem('favoritesData', favoritesJSON);
 });
