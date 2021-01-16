@@ -283,7 +283,7 @@ i.fa-heart.main.favorited {
 img {
   max-width: 24px;
   position: relative;
-  top: 4px;
+  top: 6px;
 }
 
 @media only screen and (min-width: 768px) {
