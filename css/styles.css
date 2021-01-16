@@ -280,6 +280,12 @@ i.fa-heart.main.favorited {
   left: calc(50% - 40px) !important;
 }
 
+img {
+  max-width: 24px;
+  position: relative;
+  top: 4px;
+}
+
 @media only screen and (min-width: 768px) {
   div.col-card {
     width: 50%;
