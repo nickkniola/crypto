@@ -57,6 +57,7 @@ navToggler.addEventListener('click', toggleNav);
 navLinks.addEventListener('click', viewSwapper);
 form.addEventListener('submit', searchCrypto);
 miniCardRow.addEventListener('click', toggleMiniFullScreen);
+navLinks.addEventListener('click', toggleMiniFullScreen);
 
 function mainCardEventListeners() {
   mainCard = document.querySelector('div.col-card .card');
@@ -407,6 +408,7 @@ function viewSwapper(event) {
   const homeLink = document.querySelector('.nav-item.home');
   const favoritesLink = document.querySelector('.nav-item.favorites');
   miniCards = document.querySelectorAll('.mini-card');
+  toggleNav();
   if (event.target === favoritesLink) {
     favoritesView = true;
     form.setAttribute('class', 'hidden');
@@ -499,6 +501,20 @@ function toggleMiniFullScreen(event) {
       event.target.nextElementSibling.children[0].setAttribute('class', 'hidden');
       event.target.nextElementSibling.children[2].setAttribute('class', 'hidden');
       miniCardFullScreen = false;
+    } else {
+      const miniCardFullScreenElement = document.querySelector('div.mini-card-full-screen');
+      if (miniCardFullScreenElement) {
+        miniCards.forEach(el => el.setAttribute('class', 'mini-card'));
+        miniCardFullScreenElement.setAttribute('class', 'mini-card');
+        prevPrices = document.querySelectorAll('.mini-card .past-price');
+        prevPrices.forEach(el => el.setAttribute('class', 'past-price hidden'));
+        miniExpandIcons.forEach(el => el.setAttribute('class', 'fas fa-expand mini'));
+        const allHearts = document.querySelectorAll('.fa-heart');
+        allHearts.forEach(el => el.setAttribute('class', 'fas fa-heart mini shrunk'));
+        const allHR = document.querySelectorAll('hr');
+        allHR.forEach(el => el.setAttribute('class', 'hidden'));
+        miniCardFullScreen = false;
+      }
     }
   }
   if (event.target.className.includes('fas fa-heart mini')) {
