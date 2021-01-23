@@ -521,6 +521,13 @@ function toggleMiniFullScreen(event) {
     delete favorites[event.target.previousSibling.children[1].textContent.split(' (')[0].toLowerCase().replaceAll(' ', '-')];
     if (event.target.closest('.mini-card')) {
       event.target.closest('.mini-card').remove();
+      const noFavorites = document.querySelector('.no-favorites');
+      // if (!noFavorites) {
+      //   miniCardRow.appendChild(noFavoritesTextCreator());
+      // }
+      if (Object.keys(favorites).length === 0 && !noFavorites) {
+        miniCardRow.appendChild(noFavoritesTextCreator());
+      }
     }
   }
 }
@@ -563,7 +570,10 @@ function toggleFavorite() {
         delete favorites[crypto.id];
       }
     }
-    miniCardRow.appendChild(noFavoritesTextCreator());
+    const noFavorites = document.querySelector('.no-favorites');
+    if (Object.keys(favorites).length === 0 && !noFavorites) {
+      miniCardRow.appendChild(noFavoritesTextCreator());
+    }
   }
 }
 
@@ -602,8 +612,4 @@ function noFavoritesTextCreator() {
   h4Element.textContent = 'No Favorites';
 
   return h4Element;
-}
-
-if (Object.keys(favorites).length === 0) {
-  miniCardRow.appendChild(noFavoritesTextCreator());
 }
