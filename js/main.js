@@ -26,6 +26,12 @@ let errorText = null;
 let h3ErrorElement = null;
 let prevDateIncrementer = 0;
 
+window.addEventListener('load', function () {
+  if (Object.keys(favorites).length === 0) {
+    miniCardRow.appendChild(noFavoritesTextCreator());
+  }
+});
+
 Object.keys(favorites).forEach(key => {
   const xhr = new XMLHttpRequest();
   xhr.open('GET', 'https://api.coingecko.com/api/v3/simple/price?ids=' + key + '&vs_currencies=usd');
@@ -522,9 +528,6 @@ function toggleMiniFullScreen(event) {
     if (event.target.closest('.mini-card')) {
       event.target.closest('.mini-card').remove();
       const noFavorites = document.querySelector('.no-favorites');
-      // if (!noFavorites) {
-      //   miniCardRow.appendChild(noFavoritesTextCreator());
-      // }
       if (Object.keys(favorites).length === 0 && !noFavorites) {
         miniCardRow.appendChild(noFavoritesTextCreator());
       }
