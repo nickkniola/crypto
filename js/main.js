@@ -224,6 +224,8 @@ function findPastPrice(cryptocurrency, date, daysAgo) {
 }
 
 function cardCreator() {
+  miniCards = document.querySelectorAll('.mini-card');
+
   const cardDiv = document.createElement('div');
   cardDiv.setAttribute('class', 'card');
 
@@ -313,6 +315,13 @@ function cardCreator() {
 
   const heartIconElement = document.createElement('i');
   heartIconElement.setAttribute('class', 'fas fa-heart main');
+  miniCardsH4 = document.querySelectorAll('.mini-crypto-card-text > h4');
+  for (let i = 0; i < miniCardsH4.length; i++) {
+    if (miniCardsH4[i].textContent.split(' (')[0] === crypto.name) {
+      heartIconElement.setAttribute('class', 'fas fa-heart main favorited');
+      favorite = true;
+    }
+  }
   cardDiv.appendChild(heartIconElement);
 
   return cardDiv;
