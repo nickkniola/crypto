@@ -224,8 +224,6 @@ function findPastPrice(cryptocurrency, date, daysAgo) {
 }
 
 function cardCreator() {
-  miniCards = document.querySelectorAll('.mini-card');
-
   const cardDiv = document.createElement('div');
   cardDiv.setAttribute('class', 'card');
 
@@ -566,7 +564,9 @@ function toggleFavorite() {
       };
       miniCardRow.appendChild(miniCardCreator(crypto.id));
       const noFavorites = document.querySelector('.no-favorites');
-      miniCardRow.removeChild(noFavorites);
+      if (noFavorites) {
+        miniCardRow.removeChild(noFavorites);
+      }
     }
   } else {
     if (heartIcon.className.includes('heart-full-screen')) {
