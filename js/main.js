@@ -38,6 +38,9 @@ Object.keys(favorites).forEach(key => {
   xhr.responseType = 'json';
 
   xhr.addEventListener('load', function () {
+    if (!xhr.response[key]) {
+      return;
+    }
     const fullPrice = xhr.response[key].usd.toFixed(2).toString();
     if (fullPrice.length >= 8) {
       const firstHalf = fullPrice.slice(0, 2);
