@@ -486,6 +486,7 @@ function toggleFullScreen() {
 function toggleMiniFullScreen(event) {
   miniExpandIcons = document.querySelectorAll('.fa-expand.mini');
   miniCards = document.querySelectorAll('.mini-card');
+  miniCardsH4 = document.querySelectorAll('.mini-crypto-card-text > h4');
   if (!miniCardFullScreen) {
     if (event.target.className.includes(miniExpandIcons[0].className)) {
       miniCards.forEach(el => el.setAttribute('class', 'mini-card hidden'));
@@ -530,8 +531,14 @@ function toggleMiniFullScreen(event) {
       }
     }
   }
+
   if (event.target.className.includes('fas fa-heart mini')) {
-    delete favorites[event.target.previousSibling.children[1].textContent.split(' (')[0].toLowerCase().replaceAll(' ', '-')];
+    if (event.target.previousSibling.children[1].textContent.split(' (')[0] === 'Alpha Token') {
+      delete favorites['alpha-platform'];
+    } else {
+      delete favorites[event.target.previousSibling.children[1].textContent.split(' (')[0].toLowerCase().replaceAll(' ', '-')];
+    }
+
     if (event.target.closest('.mini-card')) {
       event.target.closest('.mini-card').remove();
       const noFavorites = document.querySelector('.no-favorites');
