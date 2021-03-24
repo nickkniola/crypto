@@ -490,6 +490,11 @@ function toggleMiniFullScreen(event) {
   miniExpandIcons = document.querySelectorAll('.fa-expand.mini');
   miniCards = document.querySelectorAll('.mini-card');
   miniCardsH4 = document.querySelectorAll('.mini-crypto-card-text > h4');
+
+  if (!miniExpandIcons[0]) {
+    return;
+  }
+
   if (!miniCardFullScreen) {
     if (event.target.className.includes(miniExpandIcons[0].className)) {
       miniCards.forEach(el => el.setAttribute('class', 'mini-card hidden'));
